@@ -39,7 +39,7 @@
 		}
 		
 		$i=0;
-		print_r(array_values($arrRO));
+		/*print_r(array_values($arrRO));
 		foreach ($arrRO as $arrROinterior) {
 			$arrROfinal = explode('~',$arrROinterior);
 			$x=0;
@@ -65,11 +65,13 @@
 		}
 		$x++;
 		}
+		 */
 		$arrayOriginal[8]=implode('~',$arrRO);
 		$request = implode('|', $arrayOriginal);
 		
 		
 		//CONVERT VALUES FOR RoomOccupancy
+		/*
 		$i=0;
 				foreach ($checkRO as $checkNeed) {	
 					if ($checkNeed) {
@@ -112,6 +114,7 @@
 								}
 							$i++;
 						}
+						*/
 				$arrayOriginal[8]=implode('~',$arrRO);
 				$request = implode('|', $arrayOriginal);
 

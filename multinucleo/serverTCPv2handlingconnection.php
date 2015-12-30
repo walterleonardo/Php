@@ -126,7 +126,7 @@
 	 
 	            //$output = "OK ... $input\n";
 				 //$output = "ERR \"Error Description\"\n";
-	             $output = "OK |2|2|2|2\n";
+	             $output = "OK |2,3,4,5,6|2,3,4,5,6|2,3,4,5,6|2,3,4,5,6\n";
 	            
 	             
 	            //send response to client
