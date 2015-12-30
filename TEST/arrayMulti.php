@@ -6,29 +6,37 @@
 	
 	
 	foreach ($outerARR as $arrvalue) {
-
 	    //explode this row into columns
 	    $innerARR = explode(",", $arrvalue);
-
 		//explode this row into columns
-		foreach ($innerARR as $innervalue) {
-			if (substr_count($innervalue, '~') > 0) {
+		//foreach ($innerARR as $innervalue) {
+			//if (substr_count($innervalue, '~') > 0) {
 			    //explode this row into columns
-			    $moreinnerARR = explode("~", $innervalue);
-			
-			//foreach ($moreinnerARR as $moreinnervalue) {
-			//			if (substr_count($moreinnervalue, '#') > 0) {
-			//			    //explode this row into columns
-			//			    $moremoreinnerARR = explode("#", $moreinnervalue);
+			    //$moreinnerARR = explode("~", $innervalue);
+				//foreach ($moreinnerARR as $moreinnervalue) {
+				//		if (substr_count($moreinnervalue, '#') > 0) {
+						    //explode this row into columns
+				//		    $moremoreinnerARR = explode("#", $moreinnervalue);
 			//				$moreinnerARR[] = $moremoreinnerARR;
-			//			}
-			//		}
-				$innerARR[] = $moreinnerARR;
-			}
-		}
+				//}
+				//	$moreinnerARR[] = $moremoreinnerARR;
+				
+			//	$innerARR[] = $moreinnerARR;
+			//}
 	    //add the newly created array of columns to the output array as a new index
 	    $arr[] = $innerARR;
 	}
+	
+	//$arr8 = explode("~",$arr[8]);
+	$i=0;
+	foreach ($arr[8] as $arr8inner) {
+		if (strpos($arr8inner, '~')) {
+		$arr8 = explode("~",$arr8inner);
+		$arr[8][$i] = $arr8;
+		}
+		$i++;
+	}
+	
 	
 	
 	print_r ($arr);
@@ -49,7 +57,29 @@
 	    return join(isset($join[$lvl])?$join[$lvl]:"", $res);
 	}
 
-	$arrString = joinr(array("|", ",", "~"), $arr);
+	$arrString = joinr(array("|",",","~","#"), $arr);
+	
+	
+	
+	
 	echo "ARRAY: $arrString";
+	
+	
+	indexedArray($arr);
+	
+	function indexedArray($arr) {
+	
+	$arrayIndex = array('customerId','environment','requestSource','passengerNationality','hotelIds','cityId', 'channelTypes','channels', 'channelWithAutomapping','roomOccupancies','hotelFilter','roomFilter'
+		);
+	
+	 $i = 0;
+	$keys = array_keys($arr);
+	 for($i=0;$i<count($keys);$i++)
+	{
+	$arr[$arr[$i]]=$arrayIndex[$i];
+	unset($arr[$i]);
+	}
+	 print_r($arr);
+	}
 
 ?>

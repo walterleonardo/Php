@@ -6,12 +6,6 @@
 	$innerchannelTypes = explode(",",$outerARR[6]);
 	$innerchannels = explode(",",$outerARR[7]);
 	$innerHotelIds = explode(",",$outerARR[4]);
-	$innerchannelWithAutomapping = explode(",",$outerARR[8]);
-	foreach ($innerchannelWithAutomapping as $key => $value) {
-		$inner1channelWithAutomapping = explode("~",$value);
-		innerchannelWithAutomapping[] = $inner1channelWithAutomapping;
-	}
-	
 	$innerroomFilter = explode(",",$outerARR[11]);
 	
 	
@@ -27,8 +21,8 @@
 	'hotelIds' => $innerHotelIds,
 	'cityId' => $outerARR[5],
 	'channelTypes' => $innerchannelTypes,
-	'channels' => $innerchannels,
-	'channelWithAutomapping' => $innerchannelWithAutomapping,
+	'channels' => innerchannels,
+	'channelWithAutomapping' => $outerARR[8],
 	'roomOccupancies' => $outerARR[9],
 	'hotelFilter' => $outerARR[10],
 	'roomFilter' => $innerroomFilter
@@ -42,7 +36,7 @@
 	
 	print_r($arrayIndex);
 	$arrString = implode("|",$arrayIndex);
-	echo "ARRAY: $arrString \n";
+	//echo "ARRAY: $arrString \n";
 	//echo $arrayIndex["hotelIds"];
-//echo "$arrayIndex['customerId']|$arrayIndex['environment']|$arrayIndex['requestSource']|$arrayIndex['passengerNationality']|$arrayIndex['hotelIds']|$arrayIndex['cityId']|$arrayIndex['channelTypes']|$arrayIndex['channels']|$arrayIndex['channelWithAutomapping']|$arrayIndex['roomOccupancies']|$arrayIndex['hotelFilter']|$arrayIndex['roomFilter']\n";
+echo $arrayIndex["customerId"]|$arrayIndex["environment"]|$arrayIndex["requestSource"]|$arrayIndex["passengerNationality"]|$arrayIndex["hotelIds"]|$arrayIndex["cityId"]|$arrayIndex["channelTypes"]|$arrayIndex["channels"]|$arrayIndex["channelWithAutomapping"]|$arrayIndex["roomOccupancies"]|$arrayIndex["hotelFilter"]|$arrayIndex["roomFilter"];
 ?>

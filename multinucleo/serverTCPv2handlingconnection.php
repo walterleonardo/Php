@@ -3,7 +3,7 @@
 	set_time_limit (0);
 	 
 	$address = "0.0.0.0";
-	$port = 5000;
+	$port = 10003;
 	$max_clients = 10;
 	 
 	if(!($sock = socket_create(AF_INET, SOCK_STREAM, 0)))
@@ -18,7 +18,7 @@
 	//Say to system that need to use the same socket. remove error in BIND
 	socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
 	// Bind the source address
-	if( !socket_bind($sock, $address , 5000) )
+	if( !socket_bind($sock, $address , 10003) )
 	{
 	    $errorcode = socket_last_error();
 	    $errormsg = socket_strerror($errorcode);
@@ -126,7 +126,9 @@
 	 
 	            //$output = "OK ... $input\n";
 				 //$output = "ERR \"Error Description\"\n";
-	             $output = "OK |2,3,4,5,6|2,3,4,5,6|2,3,4,5,6|2,3,4,5,6\n";
+	            // $output = "OK |||2,3,4,5,6|aasd,asdasd|||2,3,4,5,6|aasd,asdasd|||2,3,4,5,6|aasd,asdasd|||\n\r";
+				$output = "OK |||0,1011,GT;043583,364,A02|sadasd,907435|||0,1012,GT;043583,365,A02|sadasd1,907436|||0,1011,GT;043583,365,A02|sadasd1,907437\n\r";
+				$output = "OK |||0,1006,16564,34,1892845|||0,1007,16564,44,44|||0,1007,16564,44,2414345|||0,1007,16564,44,2413875|||0,1007,16564,54,2411005|||0,1007,16564,64,2415005|||0,1007,16564,64,54|||0,1013,16564,34,1892845|||0,1649,16564,34,1892845|||0,1689,16564,34,1892845|||0,1709,16564,34,1892845|||1,1006,16564,34,1892845|||1,1007,16564,44,2414345|||1,1007,16564,44,2413875|||1,1007,16564,54,2411005|||1,1007,16564,64,2415005|||1,1013,16564,34,1892845|||1,1649,16564,34,1892845|||1,1689,16564,34,1892845|||1,1709,16564,34,1892845\r\n";
 	            
 	             
 	            //send response to client
