@@ -19,9 +19,58 @@ function convertAnswerStringToArray($string) {
 
 		return $array_need;
 }
+//CONVERT ARRAY MULTIDIMENSIONAL TO STRING
+//INCLUDE IN GLUES THE SIGN TO SEPARATE VALUES by EXAMPLE array("|",",","~","#")
+function convertRequestArrayToString(array $glues, array $array) {
+	 			$out = "";
+			    $g = array_shift($glues);
+			    $c = count($array);
+			    $i = 0;
+			    foreach ($array as $val){
+			        if (is_array($val)){
+			            $out .= convertRequestArrayToString($glues,$val);
+			        } else {
+			            $out .= (string)$val;
+			        }
+			        $i++;
+			        if ($i<$c){
+			            $out .= $g;
+			        }
+			    }
+			    return $out;
+}
 
-function convertRequestArrayToString($array) {
-	
+// CONVERT STRING TO ARRAY
+//DELIMITER NEED THE SEPARATOR SIGN THAT HAVE THE TEXT
+function multi_explode(array $delimiter,$string){
+		    $d = array_shift($delimiter);
+		    if ($d!=NULL){
+		        $tmp = explode($d,$string);
+		        foreach ($tmp as $key => $o){
+		            $out[$key] = multi_explode($delimiter,$o);
+		        }
+		    } else {
+		        return $string;
+		    }
+		    return $out;
+		}
+		
+		
+//CONVERT INTEGER IN BOOLEAN
+function int2bool($value) {
+	if (is_numeric($value)){
+		$valueint = (int)$value;
+		if ($valueint == "1") {
+			$out = Y;
+		} else if ($valueint == "0") {
+			$out = N;
+		} else {
+			return "NO BOOL";	
+		}
+		return $out;
+	} else {
+		return "NO BOOL";	
+	}
 }
 
 ?>
