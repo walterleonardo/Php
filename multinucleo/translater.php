@@ -122,15 +122,14 @@
 	return $request;
 	}
 
-
+///
+//TRANSFORM ANSWER TO ARRAY
 	function transResponse($response) {
 		$arrayOriginal = explode('|',$response);
 		$check = [true,true,true,true,true];
 		$checkQ = 5;
 		$arrCount = count($arrayOriginal);
-
-			
 	return $response;
 	}
-
+///
 ?>

@@ -162,17 +162,14 @@ $arrayIndexMandatory = array(
 	}
 	
 	
-	
+///
+//VERIFY IF WE RECEIVE ALL THE MANDATORY VALUES
 	function checkAnswer($array) {
-
 					$arrayOriginal = explode('|',$array);
 					$check = [true,true,true,true,true];
 					$checkQ = 5;
 					$arrCount = count($arrayOriginal);
 					//echo "ag = $checkQ $arrCount \n";
-
-					
-					
 					if ($arrCount != $checkQ) {
 						//echo "Incomplete response";
 						return false;
@@ -187,8 +184,18 @@ $arrayIndexMandatory = array(
 						}
 						$i++;
 					}
+		unset($array);
+		unset($check);
+		unset($checkQ);
+		unset($arrCount);
+		unset($checkNeed);
+		unset($arrayOriginal);
 		return true;
 		}
+///
+
+
+
 	function isArray($value) {
 		return is_array($value);
 	}
