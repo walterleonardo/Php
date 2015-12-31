@@ -48,6 +48,50 @@ $arrayIndex= array(
 		);
 		
 
+function convertBool() {
+	$value = $arrayIndex[passengerNationality];
+	$arrayIndex[passengerNationality] = int2bool($value);
+	
+	foreach ($arrayIndex[roomOccupancies] as $key => $value) {
+		echo "$key --> $value";
+	}
+	
+}
+
+foreach ($arrayIndex[roomOccupancies] as $key => $roomOccupancies) {
+		foreach ($roomOccupancies as $key2 => $value) {
+			//echo "$key -->  $value \n";
+			if (($key2 === 'twin') || ($key2 === 'extraBed')) {
+				echo "CONVERTIR A BOOL\n";
+				$converted = int2bool($value);
+			$arrayIndex[roomOccupancies][$key][$key2] = $converted;
+			echo "$converted \n";
+			echo "$arrayIndex[roomOccupancies][$i][$key] \n";
+			}
+		
+		}
+	}
+	
+	
+//CONVERT INTEGER IN BOOLEAN
+function int2bool($value) {
+	if (is_numeric($value)){
+		$valueint = (int)$value;
+		if ($valueint == "1") {
+			$out = Y;
+		} else if ($valueint == "0") {
+			$out = N;
+		} else {
+			return "NO BOOL";	
+		}
+		return $out;
+	} else {
+		return "NO BOOL";	
+	}
+}
+
+
+
 
 	$arrayIndexType = array(
 	'customerId' => "integer",
@@ -98,6 +142,10 @@ $arrayIndex= array(
 
 
 
+
+
+
+
 	$arrayIndexMandatory = array(
 	'customerId' => true,
 	'environment' => true,
@@ -142,8 +190,13 @@ $arrayIndex= array(
 						)
 	);
 		
-		
-//COMPARE CON MANDATORY
+
+
+
+
+
+
+/*//COMPARE CON MANDATORY
 	foreach ($arrayIndex as $clave1level => $value1level) {
 		if (is_array($value1level)) {
 			echo $clave1level . "=>";
@@ -280,9 +333,9 @@ foreach ($arrayIndex as $clave1level => $value1level) {
 		    }
 		    return $out;	
 		}
-	
+*/
 
-echo typeof_if_query("$arrayIndex[passengerNationality]");
+/*echo typeof_if_query("$arrayIndex[passengerNationality]");
 echo typeof_if_query("$arrayIndex[customerId]");
 echo typeof_if_query("$arrayIndex[environment]");
 echo typeof_if_query("$arrayIndex[hotelIds]");
@@ -291,6 +344,7 @@ echo $arrayIndex[passengerNationality];
 echo $arrayIndex[customerId];
 echo $arrayIndex[environment];
 echo $arrayIndex[hotelIds];
+*/
 //print_r($arrayIndex);
 				function typeof_if_query($var) {
 				   
@@ -320,4 +374,7 @@ echo $arrayIndex[hotelIds];
 
 			//print_r($foo);
 			//print_r($bar);
+			
+			
+print_r($arrayIndex);
 ?>
