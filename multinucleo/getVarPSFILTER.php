@@ -1,8 +1,8 @@
 <?php
-include_once("checkMandatory.php");
-include_once("requestToTcp.php");
-include_once("translater.php");
-include_once("convertTo.php");
+include("checkMandatory.php");
+include("requestToTcp.php");
+include("translater.php");
+include("convertTo.php");
 $demoInfo="164|prod|1|Y|14,24,34,44,54,64|||||1~5#5#10~N~N,2~2#3#6~N~N||";
 $debug=false;
 //$requestfromSUPPLIER="164|prod|1|1|14,24,34,44,54,64|||||1~5#5#10~N~N,2~2#3#6~N~N||";
@@ -16,19 +16,24 @@ function callPrefilter($arr) {
 // Delimiter Message with |
 	//checkRequest($arr)
 	if (true){
-		//echo "ARRAY: $arrString\n";
-		if ($debug) echo "VALOR A ENVIAR sin convertir	$arr\n";
-		//$arr = transRequest($arr);
-		if ($debug) echo "VALOR A ENVIAR convertido		$arr\n";
+		if ($debug) echo "VALOR A ENVIAR sin convertir\n";
+		if ($debug) print_r($arr);
 		//CONVERT ALL THE BOOL FROM INT TO STRING Y or N
 		$arrayIndexAfterBool = convertBolleans($arr);
+		if ($debug) echo "VALOR A ENVIAR convertido booleanos\n";
+		if ($debug) print_r($arr);
 		//CONVERT ARRAY MULTIDIMENSIONAL TO STRING with FORMAT
 		$arrConverted2String = convertRequestArrayToString(array('|',',','~','#'),$arrayIndexAfterBool);
+		if ($debug) echo "VALOR A ENVIAR convertido a string\n";
+		if ($debug) echo $arr;
+		if ($debug) echo "\n";
 		//SEND REQUEST TO SERVER
 		$answer = request($arrConverted2String);
-		if ($debug) echo $requestConverted;
 		//IF CHECKANSWER SAY TRUE THE ANSWER IS CORRECT FORMATED
 		if (checkAnswer($answer)){
+			if ($debug) echo "VALOR RECIBIDO sin convertir a array\n";
+			if ($debug) echo $answer;
+			if ($debug) echo "\n";
 			//CHECK IF ALL THE VALUE ARE INCLUDED
 			$answer = transResponse($answer);
 			$answerChecked = $answer;
