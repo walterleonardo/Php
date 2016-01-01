@@ -83,23 +83,28 @@ function multi_explode(array $delimiter,$string){
 //CONVERT TO BOOLEAN WOORK WITH INT2BOOL
 function convertBolleans($array) {
 		$arrayIndex = $array;
-		$converted = int2bool($arrayIndex[passengerNationality]);
-		$arrayIndex[passengerNationality] = $converted;
+		if (isset($arrayIndex[passengerNationality])) {
+			$converted = int2bool($arrayIndex[passengerNationality]);
+			$arrayIndex[passengerNationality] = $converted;
+		}
+		if (isset($arrayIndex[roomFilter][suite])) {
 		$converted = int2bool($arrayIndex[roomFilter][suite]);
 		$arrayIndex[roomFilter][suite] = $converted;
-		
-		foreach ($arrayIndex[roomOccupancies] as $key => $roomOccupancies) {
-				foreach ($roomOccupancies as $key2 => $value) {
-					//echo "$key -->  $value \n";
-					if (($key2 === 'twin') || ($key2 === 'extraBed')) {
-						//echo "CONVERTIR A BOOL\n";
-						$converted = int2bool($value);
-					$arrayIndex[roomOccupancies][$key][$key2] = $converted;
-					//echo "$converted \n";
-					//echo "$arrayIndex[roomOccupancies][$i][$key] \n";
+		}
+		if (isset($arrayIndex[roomOccupancies])) {
+			foreach ($arrayIndex[roomOccupancies] as $key => $roomOccupancies) {
+					foreach ($roomOccupancies as $key2 => $value) {
+						//echo "$key -->  $value \n";
+						if (($key2 === 'twin') || ($key2 === 'extraBed')) {
+							//echo "CONVERTIR A BOOL\n";
+							$converted = int2bool($value);
+						$arrayIndex[roomOccupancies][$key][$key2] = $converted;
+						//echo "$converted \n";
+						//echo "$arrayIndex[roomOccupancies][$i][$key] \n";
+						}
+					
 					}
-				
-				}
+			}
 		}
 		
 		unset($array);

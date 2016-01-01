@@ -5,7 +5,29 @@ include("translater.php");//-/
 include("convertTo.php");//-/-/
 $debug=false;
 
-function callPrefilter($arr) {
+
+
+
+function callPrefilter($arrData) {
+//CREATION OF ARRAY BASE WITH BLANK VALUES
+$arrBase = array(
+'customerId' => '',
+'environment' => '',
+'requestSource' => '',
+'passengerNationality' => '',
+'hotelIds' => '',
+'cityId' => '',
+'channelTypes' => '',
+'channels' => '',
+'channelWithAutomapping' => '',
+'roomOccupancies' => '',
+'hotelFilter' => '',
+'roomFilter' => ''
+);
+
+//FILL ARRAY BASE WITH DATA
+$arr = array_replace_recursive($arrBase, $arrData);
+
 // INCLUR CHEQUEO DE MANDATORY EN ESTE TRUE
 	if (true){
 		if ($debug) echo "VALOR A ENVIAR sin convertir\n";

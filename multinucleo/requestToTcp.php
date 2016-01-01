@@ -6,8 +6,10 @@
 		//////////////////////////////
 		$address = "192.168.0.178";
 		$port = 10003;
-		$debug = false;
-		//$demoInfo="PSFILTER |164|prod|1|Y|14,24,34,44,54,64|||||1~5#5#10~N~N,2~2#3#6~N~N||\r\n";
+		$debug = true;
+		$message = "PSFILTER |$var\r\n";
+		//$message = $demoInfo;
+		//$message="PSFILTER |164|prod|1|Y|14,24,34,44,54,64|||||1~5#5#10~N~N,2~2#3#6~N~N||\r\n";
 		//////////////////////////////
 		//////////////////////////////
 		//////////////////////////////
@@ -27,11 +29,9 @@
 		    die("Could not connect: [$errorcode] $errormsg \n");
 		}
 		if ($debug) echo "Connection established \n";
-		//$message = "ESTE ES MI MENSAJE \n";
-		 $message = "PSFILTER |$var\r\n";
-		//$message = $demoInfo;
+
 		//Send the message to the server
-		if( ! socket_send ( $sock , $message , strlen($message) , 0))
+		if( !socket_send ( $sock , $message , strlen($message) , 0))
 		{
 		    $errorcode = socket_last_error();
 		    $errormsg = socket_strerror($errorcode);
