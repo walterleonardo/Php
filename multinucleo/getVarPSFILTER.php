@@ -3,33 +3,29 @@ include("checkMandatory.php");//-/
 include("requestToTcp.php");//-/
 include("translater.php");//-/
 include("convertTo.php");//-/-/
-$debug=false;
-
-
-
 
 function callPrefilter($arrData) {
-//CREATION OF ARRAY BASE WITH BLANK VALUES
-$arrBase = array(
-'customerId' => '',
-'environment' => '',
-'requestSource' => '',
-'passengerNationality' => '',
-'hotelIds' => '',
-'cityId' => '',
-'channelTypes' => '',
-'channels' => '',
-'channelWithAutomapping' => '',
-'roomOccupancies' => '',
-'hotelFilter' => '',
-'roomFilter' => ''
-);
-
-//FILL ARRAY BASE WITH DATA
-$arr = array_replace_recursive($arrBase, $arrData);
+$debug=false;
 
 // INCLUR CHEQUEO DE MANDATORY EN ESTE TRUE
 	if (true){
+		//CREATION OF ARRAY BASE WITH BLANK VALUES
+		$arrBase = array(
+		'customerId' => '',
+		'environment' => '',
+		'requestSource' => '',
+		'passengerNationality' => '',
+		'hotelIds' => '',
+		'cityId' => '',
+		'channelTypes' => '',
+		'channels' => '',
+		'channelWithAutomapping' => '',
+		'roomOccupancies' => '',
+		'hotelFilter' => '',
+		'roomFilter' => ''
+		);
+		//FILL ARRAY BASE WITH DATA
+		$arr = array_replace_recursive($arrBase, $arrData);
 		if ($debug) echo "VALOR A ENVIAR sin convertir\n";
 		if ($debug) print_r($arr);
 		//CONVERT ALL THE BOOL FROM INT TO STRING Y or N
@@ -59,6 +55,8 @@ $arr = array_replace_recursive($arrBase, $arrData);
 	//AFTER TO ANSWER CONVERT STRING TO ARRAY MULTIDIMENSIONAL
 	$answerArray = convertAnswerStringToArray($answerChecked);
 	unset($arr);
+	unset($arrBase);
+	unset($arrData);
 	unset($answer);
 	unset($debug);
 	unset($answerChecked);

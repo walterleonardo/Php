@@ -6,7 +6,7 @@
 		//////////////////////////////
 		$address = "192.168.0.178";
 		$port = 10003;
-		$debug = true;
+		$debug = false;
 		$message = "PSFILTER |$var\r\n";
 		//$message = $demoInfo;
 		//$message="PSFILTER |164|prod|1|Y|14,24,34,44,54,64|||||1~5#5#10~N~N,2~2#3#6~N~N||\r\n";
