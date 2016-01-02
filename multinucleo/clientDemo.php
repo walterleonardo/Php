@@ -2,7 +2,7 @@
 include('runMultiNucleo.php');
 $debug=false;
 //CREATION OF A EXAMPLE REQUEST FULL COMPLETED
-/*
+ 
 $arrayIndex = array(
 'customerId' => 2,
 'environment' => 'string',
@@ -28,7 +28,7 @@ $arrayIndex = array(
 						)
 				),
 'hotelFilter' => array(
-					'children' => array(2,3,4),
+					'rating' => array(2,3,4),
 					'luxury' => 2,
 					'location' => 'string',
 					'locationId' => array(2,3,4),
@@ -54,8 +54,9 @@ $arrayIndex = array(
 					'hotelName' => 'string'
 					)
 );
-*/
-//REAL EXAMPLE OF ARRAY
+
+
+/*//REAL EXAMPLE OF ARRAY
 $arrayIndex = array(
 'customerId' => 164,
 'environment' => 'prod',
@@ -73,10 +74,28 @@ $arrayIndex = array(
 						)
 				),
 );
-
+*/
 echo "#################################\n";
-$answer = callPrefilter($arrayIndex);
-print_r($answer);
+$memory1 = memory_get_peak_usage();
+echo "Memory before to start $memory1 \n";
+$start = microtime(true);
+$request = 1;
+$i=0;
+echo "Running...\n";
+while ($i<$request) {
+	$answer = callPrefilter($arrayIndex);
+	//print_r($answer);
+	$i++;
+	//$memory2 = memory_get_peak_usage();
+	//echo "Memory after finish $memory2 \n";
+}
+$elapsed = microtime(true) - $start;
+$elapsed = round($elapsed,4,PHP_ROUND_HALF_UP);
+$memory2 = memory_get_peak_usage();
+echo "Memory after finish $memory2 \n";
+echo "Used = ";
+echo $memory2 - $memory1 . " bytes of memory\n";
+echo "took $elapsed seconds\n";
 //
 //echo "$answer \n";
 echo "#################################\n";

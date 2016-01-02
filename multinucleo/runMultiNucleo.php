@@ -45,7 +45,7 @@ $debug=false;
 		if ($debug) echo $arrConverted2String;
 		if ($debug) echo "\n";
 		//SEND REQUEST TO SERVER
-		$answer = request($arrConverted2String);
+		$answer = requestTCP($arrConverted2String);
 		if ($debug) echo "ANSWER AFTER ANYTHING  $answer \n";
 		//IF CHECKANSWER SAY TRUE THE ANSWER IS CORRECT FORMATED
 		if (checkAnswer($answer)){
