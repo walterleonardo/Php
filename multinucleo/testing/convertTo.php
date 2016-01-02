@@ -2,7 +2,7 @@
 ///
 //CONVERT ANSWER STRING TO ARRAY
 function convertAnswerStringToArray($string) {
-	$arrayAnswer = explode("|||",$string);
+	$arrayAnswer = explode("|",$string);
 	//Delete incorrect data
 	unset($arrayAnswer[0]);
 	foreach($arrayAnswer as $array_values)
@@ -48,13 +48,13 @@ function convertRequestArrayToString(array $glues, array $array) {
 	unset($g);
 	unset($c);
 	unset($i);
-    return $out;
+	return $out;
 	unset($out);
 }
 ///
 
 
-
+/*
 // CONVERT STRING TO ARRAY
 //DELIMITER NEED THE SEPARATOR SIGN THAT HAVE THE TEXT
 function multi_explode(array $delimiter,$string){
@@ -78,7 +78,85 @@ function multi_explode(array $delimiter,$string){
     return $out;
 	unset($out);
 }
+*/
 
+
+///
+function convertBollean(&$array) {
+	$debug= false;
+	if ($debug) echo "REQUEST TO BOOLEAN 1\n";
+		if (isset($array[passengerNationality])) {
+			if ($debug) echo "REQUEST TO BOOLEAN 2\n";
+			if (is_numeric($array[passengerNationality])){
+					$valueint = (int)$array[passengerNationality];
+					if ($valueint == "1") {
+						$out = Y;
+					} else if ($valueint == "0") {
+						$out = N;
+					} else {
+						return false;	
+					}
+			} else {
+				return false;
+			}
+		$array[passengerNationality] = $out;
+		}
+		
+		if (isset($array[roomFilter][suite])) {
+					if (is_numeric($array[roomFilter][suite])){
+							$valueint = (int)$array[roomFilter][suite];
+							if ($valueint == "1") {
+								$out = Y;
+							} else if ($valueint == "0") {
+								$out = N;
+							} else {
+								return false;	
+							}
+					} else {
+						return false;
+					}
+		$array[roomFilter][suite] = $converted;
+		}
+		
+		if (isset($array[roomOccupancies])) {
+			foreach ($array[roomOccupancies] as $key => $roomOccupancies) {
+					foreach ($roomOccupancies as $key2 => $value) {
+						//echo "$key -->  $value \n";
+						if (($key2 === 'twin') || ($key2 === 'extraBed')) {
+							//echo "CONVERTIR A BOOL\n";
+							if (is_numeric($value)){
+									$valueint = (int)$value;
+									if ($valueint == "1") {
+										$out = Y;
+									} else if ($valueint == "0") {
+										$out = N;
+									} else {
+										return false;									}
+									$array[roomOccupancies][$key][$key2]=$out;
+								} else {
+									return false;
+								}
+						//echo "$converted \n";
+						//echo "$arrayIndex[roomOccupancies][$i][$key] \n";
+						}
+					}
+			}
+		}
+		unset($array);
+		unset($converted);
+		unset($key);
+		unset($roomOccupancies);
+		unset($key2);
+		unset($value);
+		unset($arrayIndex);
+		return true;
+}
+///
+
+
+
+/*
+//EL resto eliminar ya que se suplanta con la funcion anterior
 ///
 //CONVERT TO BOOLEAN WOORK WITH INT2BOOL
 function convertBolleans($array) {
@@ -102,11 +180,9 @@ function convertBolleans($array) {
 						//echo "$converted \n";
 						//echo "$arrayIndex[roomOccupancies][$i][$key] \n";
 						}
-					
 					}
 			}
 		}
-		
 		unset($array);
 		unset($converted);
 		unset($key);
@@ -140,4 +216,5 @@ function int2bool($value) {
 	return "NO-BOOL";
 }
 ///
+*/
 ?>

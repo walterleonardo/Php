@@ -40,7 +40,6 @@
 		} else {
 		if ($debug) echo "Message send successfully \n";
 		 }
-		unset($message);
 		/*echo "Leyendo la respuesta:\n\n";
 		$buf = 'Este es mi buffer.';
 		if (false !== ($bytes = socket_recv($sock, $buf, 2048, MSG_WAITALL))) {
@@ -57,12 +56,14 @@
 			break;
 		}
 		socket_close($sock);
+		if ($debug) echo "Respuesta ---> $buf \n";
+		unset($message);
 		unset($address);
 		unset($port);
 		unset($debug);
 		unset($sock);
 		return $buf;
-		unset($buf);
+		//unset($buf);
 
 	}
 ///
