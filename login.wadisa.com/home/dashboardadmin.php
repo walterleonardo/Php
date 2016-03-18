@@ -6,37 +6,37 @@ $auth_user = new USER();
 $user_id_name = $_SESSION['user_session'];
 $user_id = $_SESSION['company_code'];
 
-if (isset($_POST['userid'])){
-$uid = strip_tags($_POST['userid']);
-$_SESSION['user_id'] = $uid;
-$sql = "SELECT * FROM clients WHERE id=$uid";
-$stmt = $auth_user->runQuery($sql);
-$stmt->execute();
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$button = "UPDATE";
-$action = "updateclient";
 
-$actual_link = 'http://'.$_SERVER[HTTP_HOST].'/home/dashboardshow.php'.'?btn-update=enable&type=load&userid='.$user_id.'&clientid='.$uid ;
+
+if (isset($_POST['userid'])) {
+    $uid = strip_tags($_POST['userid']);
+    $_SESSION['user_id'] = $uid;
+    $sql = "SELECT * FROM clients WHERE id=$uid";
+    $stmt = $auth_user->runQuery($sql);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $button = "UPDATE";
+    $action = "updateclient";
+
+    $actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
 
 //CREAMON UNA INSTANCIA DE QR
-$qr = new QrGenerator();
-$imageName = $qr->qrGen($results,$actual_link);
-
-
-} else if (isset($_SESSION['user_id'])){
+    $qr = new QrGenerator();
+    $imageName = $qr->qrGen($results, $actual_link);
+} else if (isset($_SESSION['user_id'])) {
 //
-$uid=$_SESSION['user_id'];
-$sql = "SELECT * FROM clients WHERE id=$uid";
-$stmt = $auth_user->runQuery($sql);
-$stmt->execute();
-$cuenta = $stmt->rowCount();
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $uid = $_SESSION['user_id'];
+    $sql = "SELECT * FROM clients WHERE id=$uid";
+    $stmt = $auth_user->runQuery($sql);
+    $stmt->execute();
+    $cuenta = $stmt->rowCount();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //CREAMON UNA INSTANCIA DE QR
-$actual_link = 'http://'.$_SERVER[HTTP_HOST].'/home/dashboardshow.php'.'?btn-update=enable&type=load&userid='.$user_id.'&clientid='.$uid;
-$qr = new QrGenerator();
-$imageName = $qr->qrGen($results,$actual_link);
-$button = "UPDATE";
-$action = "updateclient";
+    $actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
+    $qr = new QrGenerator();
+    $imageName = $qr->qrGen($results, $actual_link);
+    $button = "UPDATE";
+    $action = "updateclient";
 }
 
 
@@ -53,11 +53,7 @@ if (!$results_user[0]['admin']) {
     $auth_user->redirect('../home/index.php');
 }
 
-
-
-
-
-
+$file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -125,7 +121,7 @@ if (!$results_user[0]['admin']) {
                         </li>
                         <?php
                         if ($results_user[0]['admin']) {
-                           echo "<li>";
+                            echo "<li>";
                             echo "<a class='page-scroll' href='dashboard.php' >ADMIN</a>";
                             echo "</li>";
                             echo "<li>";
@@ -151,8 +147,8 @@ if (!$results_user[0]['admin']) {
                         <h2 class="section-heading">INFORMATION</h2>
                         <h3 class="section-subheading text-muted">.</h3>
                         <h3><?php echo "COMPANY ID " . $user_id . ""; ?></h3>
-                        <h3><?php echo "CLIENT ID " . $uid . "";?></h3>
-                        <a href="<?php echo $actual_link;?>"><?php echo $actual_link;?></a>
+                        <h3><?php echo "CLIENT ID " . $uid . ""; ?></h3>
+                        <a href="<?php echo $actual_link; ?>"><?php echo $actual_link; ?></a>
                         <br>
                         <br>
                     </div>
@@ -164,19 +160,16 @@ if (!$results_user[0]['admin']) {
                             <div class="row">
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon">ID</i></span>
-                                        <input type="text" class="form-control" 
-                                        <?php
-                                               if (empty($results[0]['id'])) {
-                                                   ?>placeholder="Name *"<?php
-                                               } else {
-                                                   ?>value="<?php echo "" . $results[0]['id'] . ""; ?>"<?php
-                                               }
-                                               ?>
-                                                   id="id" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> PHOTO</i></span>
+                                        <a href="#" onclick="lightbox_open();"><img src="<?php
+                                            if (!file_exists($file)) {
+                                                echo '../imagenes/picture.png';
+                                            } else {
+                                                echo $file;
+                                            }
+                                            ?>" alt=""></a>
                                         <p class="help-block text-danger"></p>
                                     </div>
-
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
@@ -187,7 +180,7 @@ if (!$results_user[0]['admin']) {
                                                    ?>value="<?php echo $results[0]['name']; ?>"<?php
                                                }
                                                ?>
-                                               id="name">
+                                               id="name" required>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
@@ -202,6 +195,19 @@ if (!$results_user[0]['admin']) {
                                                }
                                                ?>
                                                id="lastname">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> MAIL</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['mail'])) {
+                                                   ?>placeholder="Mail *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['mail']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="mail">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
@@ -227,7 +233,7 @@ if (!$results_user[0]['admin']) {
                                                    ?>value="<?php echo $results[0]['town']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="town" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
@@ -240,7 +246,7 @@ if (!$results_user[0]['admin']) {
                                                    ?>value="<?php echo $results[0]['country']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="country" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
@@ -253,7 +259,7 @@ if (!$results_user[0]['admin']) {
                                                    ?>value="<?php echo $results[0]['cp']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="cp" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
@@ -287,7 +293,7 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
-                                            <?php
+                                        <?php
                                                if (empty($results[0]['phonee2'])) {
                                                    ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
@@ -298,40 +304,41 @@ if (!$results_user[0]['admin']) {
                                         <p class="help-block text-danger"></p>
                                     </div>
 
+                                </div>
+                                <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $results[0]['user_id'] ?>"> 
+                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>"> 
+                                <input type="hidden" name="qr" class="form-control" id="qr" value="<?php echo $imageName[0] ?>"> 
+                                <input type="hidden" name="qrlink" class="form-control" id="qrlink" value="<?php echo $actual_link ?>"> 
+                                <input type="hidden" name="type" class="form-control" id="type" value="updateclient">  
+                                <div class="col-md-6">
+
+
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
 <?php echo '<img src="' . $imageName[0] . '" />'; ?>
                                         <p class="help-block text-danger"></p>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $results[0]['user_id'] ?>"> 
-                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>"> 
-                                 <input type="hidden" name="qr" class="form-control" id="qr" value="<?php echo $imageName[0] ?>"> 
-                                <input type="hidden" name="qrlink" class="form-control" id="qrlink" value="<?php echo $actual_link ?>"> 
-                                <input type="hidden" name="type" class="form-control" id="type" value="updateclient">  
-                                <div class="col-md-6">
+                                    </div> 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="JOINING DATE: <?php echo $results[0]['joining_date']; ?>" id="joining_date_1" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> LANGUAJE</i></span>
+                                        <input class="form-control"
+                                        <?php
+                                               if (empty($results[0]['languaje'])) {
+                                                   ?>placeholder="Languaje *"<?php
+                                               } else {
+                                                   ?>value="<?php echo "" . $results[0]['languaje'] . ""; ?>"<?php
+                                               }
+                                               ?> id="languaje" >
                                         <p class="help-block text-danger"></p>
                                     </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="UPDATE DETAIL: <?php echo $results[0]['end_date']; ?>" id="end_date_1" disabled>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
                                         <input class="form-control"
-                                               <?php
+                                        <?php
                                                if (empty($results[0]['drname'])) {
                                                    ?>placeholder="Doctor Name *"<?php
                                                } else {
-                                                   ?>value="<?php echo $results[0]['drname']; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['drname'] . ""; ?>"<?php
                                                }
                                                ?> id="drname" >
                                         <p class="help-block text-danger"></p>
@@ -340,11 +347,11 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
                                         <input class="form-control" 
-                                               <?php
+                                        <?php
                                                if (empty($results[0]['drphone'])) {
                                                    ?>placeholder="Doctor Phone *"<?php
                                                } else {
-                                                   ?>value="<?php echo $results[0]['drphone']; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['drphone'] . ""; ?>"<?php
                                                }
                                                ?>  id="drphone" >
                                         <p class="help-block text-danger"></p>
@@ -353,11 +360,11 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
                                         <input class="form-control" 
-                                               <?php
+                                        <?php
                                                if (empty($results[0]['detail'])) {
                                                    ?>placeholder="Detail info *"<?php
                                                } else {
-                                                   ?>value="<?php echo $results[0]['detail']; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['detail'] . ""; ?>"<?php
                                                }
                                                ?> id="detail" >
                                         <p class="help-block text-danger"></p>
@@ -365,7 +372,7 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
                                         <input class="form-control" 
-                                                                          <?php
+                                        <?php
                                                if (empty($results[0]['alergy'])) {
                                                    ?>placeholder="Include Alergies *"<?php
                                                } else {
@@ -377,11 +384,11 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
                                         <input class="form-control" 
-                                               <?php
+                                        <?php
                                                if (empty($results[0]['medicine'])) {
                                                    ?>placeholder="Medicine info *"<?php
                                                } else {
-                                                   ?>value="<?php echo $results[0]['medicine']; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['medicine'] . ""; ?>"<?php
                                                }
                                                ?> id="medicine" >
                                         <p class="help-block text-danger"></p>
@@ -390,27 +397,23 @@ if (!$results_user[0]['admin']) {
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
                                         <input class="form-control" 
-                                               <?php
+                                        <?php
                                                if (empty($results[0]['blood'])) {
                                                    ?>placeholder="Blood info *"<?php
                                                } else {
-                                                   ?>value="<?php echo $results[0]['blood']; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
                                                }
                                                ?> id="blood" >
                                         <p class="help-block text-danger"></p>
                                     </div>
-
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12 text-center">
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> LINK</i></span>
 <?php echo '<img src="' . $imageName[1] . '" />'; ?>
                                         <p class="help-block text-danger"></p>
                                     </div>
-
-
-
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="col-lg-12 text-center">
                                     <div id="success"></div>
                                     <button type="submit" class="btn btn-xl"><?php echo $button; ?></button>
                                     <a href="dashboard.php" class="btn btn-xl">BACK</a>
@@ -453,7 +456,25 @@ if (!$results_user[0]['admin']) {
                 </div>
             </div>
         </footer>
-    <!-- /container -->
+
+        <div id="light">
+            <!--<a href="#" onclick="lightbox_close();"><img src="../imagenes/picture.png" alt="" /></a>-->
+            <div id="camera_wrapper">
+                <div id="camera"></div>
+                <button id="capture_btn">CAPTURE</button><button id="close" onclick="lightbox_close();">CLOSE</button>
+            </div>
+            <!--show captured image--> 
+            <!--<div id="show_saved_img" ></div>-->
+
+        </div>
+        <div id="fade" onClick="lightbox_close();"></div>
+
+
+        <div id="light">
+            <a href="#" onclick="lightbox_close();"><img src="<?php echo $imageName[0]; ?>" alt="" /></a>
+        </div>
+        <div id="fade" onClick="lightbox_close();"></div>
+        <!-- /container -->
         <!-- jQuery Version 1.11.0 -->
         <script src="../js/jquery-1.11.0.js"></script>
 
@@ -491,6 +512,55 @@ if (!$results_user[0]['admin']) {
             })();
         </script>
         <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
-        <!-- End Piwik Code -->    
+        <!-- End Piwik Code --> 
+        <!-- SCRIPT FOR POPUP IMAGE -->
+        <script type="text/javascript">
+            window.document.onkeydown = function (e)
+            {
+                if (!e) {
+                    e = event;
+                }
+                if (e.keyCode == 27) {
+                    lightbox_close();
+                }
+            }
+            function lightbox_open() {
+                window.scrollTo(0, 0);
+                document.getElementById('light').style.display = 'block';
+                document.getElementById('fade').style.display = 'block';
+            }
+            function lightbox_close() {
+                document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+            }
+        </script>
+        <script type="text/javascript" src="scripts/webcam.js"></script>
+        <script>
+            $(function () {
+                //give the php file path
+                webcam.set_api_url('saveimage.php');
+                webcam.set_swf_url('scripts/webcam.swf');//flash file (SWF) file path
+                webcam.set_quality(100); // Image quality (1 - 100)
+                webcam.set_shutter_sound(false); // play shutter click sound
+
+                var camera = $('#camera');
+                camera.html(webcam.get_html(320, 240)); //generate and put the flash embed code on page
+
+                $('#capture_btn').click(function () {
+                    //take snap
+                    webcam.snap();
+                    $('#show_saved_img').html('<h3>Please Wait...</h3>');
+                });
+
+
+                //after taking snap call show image
+                webcam.set_hook('onComplete', function (img) {
+                    $('#show_saved_img').html('<img src="' + img + '">');
+                    //reset camera for the next shot
+                    webcam.reset();
+                });
+
+            });
+        </script>
     </body>
 </html>

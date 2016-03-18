@@ -5,7 +5,6 @@ $auth_user = new USER();
 $user_id_name = $_SESSION['user_session'];
 $user_id = $_SESSION['company_code'];
 
-
 if (!$auth_user->is_loggedin()) {
     $auth_user->redirect('../login/index.php');
 }
@@ -20,8 +19,6 @@ if (!$results_user[0]['admin']) {
 
 $button = "UPDATE";
 $action = "updateclient";
-
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -119,34 +116,32 @@ $action = "updateclient";
                 <div class="row">
                     <div class="col-lg-12">
                         <form name="sentMessage" id="contactForm" novalidate>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon">ID</i></span>
-                                        <input type="text" class="form-control" 
-                                        <?php
-                                               if (empty($results[0]['id'])) {
-                                                   ?>placeholder="Id Auto incremented *"<?php
-                                               } else {
-                                                   ?>value="<?php echo $results[0]['id']; ?>"<?php
-                                               }
-                                               ?>
-                                                   id="id" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> PHOTO</i></span>
+                                        <a href="#" onclick="lightbox_open();"><img src="<?php
+                                        if (!file_exists($file)){ 
+                                            echo '../imagenes/picture.png'; 
+                                        } else {
+                                            echo $file;
+                                        }
+                                        
+                                        
+                                        ?>" alt=""></a>
                                         <p class="help-block text-danger"></p>
                                     </div>
-
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['name'])) {
-                                                   ?>placeholder="Name *"<?php
+                                        if (empty($results[0]['name'])) {
+                                            ?>placeholder="Name *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['name']; ?>"<?php
                                                }
                                                ?>
-                                                   id="name" required>
+                                               id="name" required>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
@@ -154,8 +149,8 @@ $action = "updateclient";
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> LASTNAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['lastname'])) {
-                                                   ?>placeholder="LastName *"<?php
+                                        if (empty($results[0]['lastname'])) {
+                                            ?>placeholder="LastName *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['lastname']; ?>"<?php
                                                }
@@ -164,11 +159,24 @@ $action = "updateclient";
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> MAIL</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                        if (empty($results[0]['mail'])) {
+                                            ?>placeholder="Mail *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['mail']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="mail">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> ADDRESS</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['address'])) {
-                                                   ?>placeholder="Address *"<?php
+                                        if (empty($results[0]['address'])) {
+                                            ?>placeholder="Address *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['address']; ?>"<?php
                                                }
@@ -180,47 +188,47 @@ $action = "updateclient";
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> TOWN</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['town'])) {
-                                                   ?>placeholder="Town *"<?php
+                                        if (empty($results[0]['town'])) {
+                                            ?>placeholder="Town *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['town']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="town" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> COUNTRY</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['country'])) {
-                                                   ?>placeholder="Country *"<?php
+                                        if (empty($results[0]['country'])) {
+                                            ?>placeholder="Country *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['country']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="country" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> POSTAL CODE</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['cp'])) {
-                                                   ?>placeholder="Postal Code *"<?php
+                                        if (empty($results[0]['cp'])) {
+                                            ?>placeholder="Postal Code *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['cp']; ?>"<?php
                                                }
                                                ?>
-                                               id="address" autocomplete="off">
+                                               id="cp" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> CONTACT</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                               if (empty($results[0]['phone'])) {
-                                                   ?>placeholder="Contact phone +34 555 555 555 *"<?php
+                                        if (empty($results[0]['phone'])) {
+                                            ?>placeholder="Contact phone +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phone']; ?>"<?php
                                                }
@@ -233,8 +241,8 @@ $action = "updateclient";
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 1</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                               if (empty($results[0]['phonee1'])) {
-                                                   ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
+                                        if (empty($results[0]['phonee1'])) {
+                                            ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phonee1']; ?>"<?php
                                                }
@@ -246,9 +254,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
-                                            <?php
-                                               if (empty($results[0]['phonee2'])) {
-                                                   ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
+                                        <?php
+                                        if (empty($results[0]['phonee2'])) {
+                                            ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phonee2']; ?>"<?php
                                                }
@@ -256,23 +264,32 @@ $action = "updateclient";
                                                id="phonee2" autocomplete="off" >
                                         <p class="help-block text-danger"></p>
                                     </div>
-
-                                    
                                 </div>
                                 <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $user_id ?>"> 
                                 <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>">  
                                 <input type="hidden" name="type" class="form-control" id="type" value="addclient">  
                                 <div class="col-md-6">
-                                    
 
-                                    
+
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> LANGUAJE</i></span>
+                                        <input class="form-control"
+                                        <?php
+                                        if (empty($results[0]['languaje'])) {
+                                            ?>placeholder="Languaje *"<?php
+                                               } else {
+                                                   ?>value="<?php echo "" . $results[0]['languaje'] . ""; ?>"<?php
+                                               }
+                                               ?> id="languaje" >
+                                        <p class="help-block text-danger"></p>
+                                    </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
                                         <input class="form-control"
-                                               <?php
-                                               if (empty($results[0]['drname'])) {
-                                                   ?>placeholder="Doctor Name *"<?php
+                                        <?php
+                                        if (empty($results[0]['drname'])) {
+                                            ?>placeholder="Doctor Name *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['drname'] . ""; ?>"<?php
                                                }
@@ -283,9 +300,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
                                         <input class="form-control" 
-                                               <?php
-                                               if (empty($results[0]['drphone'])) {
-                                                   ?>placeholder="Doctor Phone *"<?php
+                                        <?php
+                                        if (empty($results[0]['drphone'])) {
+                                            ?>placeholder="Doctor Phone *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['drphone'] . ""; ?>"<?php
                                                }
@@ -296,9 +313,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
                                         <input class="form-control" 
-                                               <?php
-                                               if (empty($results[0]['detail'])) {
-                                                   ?>placeholder="Detail info *"<?php
+                                        <?php
+                                        if (empty($results[0]['detail'])) {
+                                            ?>placeholder="Detail info *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['detail'] . ""; ?>"<?php
                                                }
@@ -308,9 +325,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
                                         <input class="form-control" 
-                                                                          <?php
-                                               if (empty($results[0]['alergy'])) {
-                                                   ?>placeholder="Include Alergies *"<?php
+                                        <?php
+                                        if (empty($results[0]['alergy'])) {
+                                            ?>placeholder="Include Alergies *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['alergy']; ?>"<?php
                                                }
@@ -320,9 +337,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
                                         <input class="form-control" 
-                                               <?php
-                                               if (empty($results[0]['medicine'])) {
-                                                   ?>placeholder="Medicine info *"<?php
+                                        <?php
+                                        if (empty($results[0]['medicine'])) {
+                                            ?>placeholder="Medicine info *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['medicine'] . ""; ?>"<?php
                                                }
@@ -333,9 +350,9 @@ $action = "updateclient";
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
                                         <input class="form-control" 
-                                               <?php
-                                               if (empty($results[0]['blood'])) {
-                                                   ?>placeholder="Blood info *"<?php
+                                        <?php
+                                        if (empty($results[0]['blood'])) {
+                                            ?>placeholder="Blood info *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
                                                }
@@ -343,7 +360,7 @@ $action = "updateclient";
                                         <p class="help-block text-danger"></p>
                                     </div>
 
-                                    
+
 
 
 
@@ -362,7 +379,14 @@ $action = "updateclient";
                 </div>
             </div>
         </section>
-
+        
+<!--          <div id="camera_wrapper">
+                <div id="camera"></div>
+                <br />
+                <button id="capture_btn">Capture</button>
+            </div>
+            show captured image 
+            <div id="show_saved_img" ></div>-->
         <footer>
             <div class="container">
                 <div class="row">
@@ -391,7 +415,22 @@ $action = "updateclient";
                     </div>
                 </div>
             </div>
-         <!-- /container -->
+        </footer>
+        
+        <div id="light">
+            <!--<a href="#" onclick="lightbox_close();"><img src="../imagenes/picture.png" alt="" /></a>-->
+            <div id="camera_wrapper">
+                <div id="camera"></div>
+                <button id="capture_btn">CAPTURE</button><button id="close" onclick="lightbox_close();">CLOSE</button>
+            </div>
+             <!--show captured image--> 
+            <!--<div id="show_saved_img" ></div>-->
+
+        </div>
+        <div id="fade" onClick="lightbox_close();"></div>
+
+
+        <!-- /container -->
         <!-- jQuery Version 1.11.0 -->
         <script src="../js/jquery-1.11.0.js"></script>
 
@@ -427,6 +466,54 @@ $action = "updateclient";
                 g.src = u + 'piwik.js';
                 s.parentNode.insertBefore(g, s);
             })();
+        </script>
+        <script type="text/javascript" src="scripts/webcam.js"></script>
+        <script>
+            $(function () {
+                //give the php file path
+                webcam.set_api_url('saveimage.php');
+                webcam.set_swf_url('scripts/webcam.swf');//flash file (SWF) file path
+                webcam.set_quality(100); // Image quality (1 - 100)
+                webcam.set_shutter_sound(false); // play shutter click sound
+
+                var camera = $('#camera');
+                camera.html(webcam.get_html(320, 240)); //generate and put the flash embed code on page
+
+                $('#capture_btn').click(function () {
+                    //take snap
+                    webcam.snap();
+                    $('#show_saved_img').html('<h3>Please Wait...</h3>');
+                });
+
+
+                //after taking snap call show image
+                webcam.set_hook('onComplete', function (img) {
+                    $('#show_saved_img').html('<img src="' + img + '">');
+                    //reset camera for the next shot
+                    webcam.reset();
+                });
+
+            });
+        </script>
+        <script type="text/javascript">
+            window.document.onkeydown = function (e)
+            {
+                if (!e) {
+                    e = event;
+                }
+                if (e.keyCode === 27) {
+                    lightbox_close();
+                }
+            };
+            function lightbox_open() {
+                window.scrollTo(0, 0);
+                document.getElementById('light').style.display = 'block';
+                document.getElementById('fade').style.display = 'block';
+            }
+            function lightbox_close() {
+                document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+            }
         </script>
         <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
         <!-- End Piwik Code -->    

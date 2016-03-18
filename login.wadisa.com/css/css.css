@@ -291,3 +291,34 @@
   src: local('Roboto Slab Bold'), local('RobotoSlab-Bold'), url(http://fonts.gstatic.com/s/robotoslab/v6/dazS1PrQQuCxC3iOAJFEJRMZUMTqD9S0syfqvqacjFo.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
+
+
+#fade{
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	z-index:1001;
+	-moz-opacity: 0.9;
+	opacity:.80;
+	filter: alpha(opacity=90);
+}
+#light{
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 200px;
+	height: 200px;
+	margin-left: -150px;
+	margin-top: -100px;					
+	border: 2px solid #FFF;
+	background: #FFF;
+	z-index:1002;
+	overflow:visible;
+}
+
+#camera_wrapper, #show_saved_img{float:left; width: 200px;}

@@ -11,6 +11,8 @@ $(function () {
             var userid = $("input#userid").val();
             var id = $("input#id").val();
             var user = $("input#user").val();
+            var mail = $("input#mail").val();
+            var languaje = $("input#languaje").val();
             var pass = $("input#pass").val();
             var sec = $("input#sec").val();
             var rpass = $("input#rpass").val();
@@ -44,6 +46,8 @@ $(function () {
                     phonee2: phonee2,
                     medicine: medicine,
                     blood: blood,
+                    mail: mail,
+                    languaje: languaje,
                     detail: detail,
                     alergy: alergy,
                     name: name,
@@ -86,10 +90,10 @@ $(function () {
                         $('#success').html("<div class='alert alert-danger'>");
                         $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                                 .append("</button>");
-                        $('#success > .alert-danger').append("<strong>Sorry " + firstName + ", we found a problema, " + data);
+                        $('#success > .alert-danger').append("<strong>Sorry " + firstName + ", we found a problem, " + data);
                         $('#success > .alert-danger').append('</div>');
                         //clear all fields
-                        //$('#contactForm').trigger("reset");
+                        $('#contactForm').trigger("reset");
 
                     }
                 },

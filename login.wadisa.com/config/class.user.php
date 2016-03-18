@@ -6,16 +6,15 @@ require_once('passwordhash.php');
 require_once('PHPMailer/PHPMailerAutoload.php');
 $val3 = $val1 + $val2;
 
-
+//GUARDA LA COKIES PARA LOS ENTORNOS DE APPLE
 if (strpos(strtolower(filter_input(INPUT_SERVER, 'HTTP_USER_AGENT')), "apple")) { //to prevent cookies for non-apple devices
     $cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
     setcookie("ses_id", session_id(), time() + $cookieLifetime);
 }
 
 class USER {
-
     private $conn;
-
+    
     public function __construct() {
         $database = new Database();
         $db = $database->dbConnection();
@@ -27,7 +26,7 @@ class USER {
         return $stmt;
     }
 
-    public function register($uname, $upass,$code=0) {
+    public function register($uname, $upass, $code = 0) {
         try {
             $new_password = password_hash($upass, PASSWORD_DEFAULT);
 
@@ -41,6 +40,8 @@ class USER {
             $userRow = $stmt1->fetch(PDO::FETCH_ASSOC);
             if ($stmt1->rowCount() == 1) {
                 $_SESSION['user_session'] = $userRow['user_id'];
+                $message = "Hi admin.<br><br>\n\n" . "A new user are create into http://QR.WADISA.COM <br>\n\n" . "Here the info: <b>$uname</b> <br>\n\n" . "And the company code provide is: $code<br><br>\n\n" . "Greetings<br><br>\n\n";
+                self::sendmailer('admin@wadisa.com', $message);
             }
             //echo "DONE";
             return true;
@@ -50,8 +51,8 @@ class USER {
             return false;
         }
     }
-    
-    public function deleteClient($uid,$user_id) {
+
+    public function deleteClient($uid, $user_id) {
         try {
             $stmt = $this->conn->prepare("DELETE FROM clients WHERE id=:uid AND user_id=:user_id");
             $stmt->bindparam(":uid", $uid);
@@ -65,16 +66,18 @@ class USER {
         }
     }
 
+    //SEND NEW GENERATED PASSWORD TO COSTUMER; ONLY PROVIDE THE EMAIL
     public function sendpass($uname) {
         try {
-
             $upass = self::generateRandomString(8); //number of characters.
             $new_password = password_hash($upass, PASSWORD_DEFAULT);
             $stmt = $this->conn->prepare("UPDATE users set user_pass=:upass WHERE user_name=:uname ");
             $stmt->bindparam(":uname", $uname);
             $stmt->bindparam(":upass", $new_password);
             $stmt->execute();
-            if (self::sendmailer($uname, $upass)) {
+            $message = "Hi.<br><br>\n\n" . "You are requested a new password from wadisa.<br>\n\n" . "Here you have the new password: <b>$upass</b> <br>\n\n" . "LINK TO LOGIN: http://qr.wadisa.com/login<br><br>\n\n" . "Greetings<br><br>\n\n";
+
+            if (self::sendmailer($uname, $message)) {
                 //echo "DONE";
                 return true;
             } else {
@@ -88,9 +91,10 @@ class USER {
         }
     }
 
-    public function search($search_term,$user_id,$limit = 10) {
+    //SERCH IN A DB BY A USER OR LIKE DATA WITH LIMIT
+    public function search($search_term, $user_id, $limit = 10) {
         // Sanitize the search term to prevent injection attacks
-        $sanitized = "%".$search_term."%";
+        $sanitized = "%" . $search_term . "%";
         $stmt = $this->conn->prepare("SELECT * FROM clients WHERE (user_id=:user_id AND name LIKE :sanitized)
       OR (user_id=:user_id AND lastname LIKE :sanitized) ORDER BY id DESC LIMIT $limit");
         $stmt->bindparam(":user_id", $user_id);
@@ -99,7 +103,7 @@ class USER {
         $stmt->execute();
         $cuenta = $stmt->rowCount();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Check results
         if ($cuenta == 0) {
             //echo "NOT FOUND";
@@ -108,6 +112,7 @@ class USER {
         return $results;
     }
 
+    //CLASS OF SEND MAIL ONLY PROVIDE EMAIL TO SEND AND MESSAGE
     public function sendmailer($email_address, $message) {
 //Create a new PHPMailer instance
         $mail = new PHPMailer;
@@ -143,7 +148,7 @@ class USER {
 //convert HTML into a basic plain-text alternative body
         //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
 //Replace the plain text body with one created manually
-        $mail->Body = "Hi.<br><br>\n\n" . "You are requested a new password from wadisa.<br>\n\n" . "Here you have the new password: <b>$message</b> <br>\n\n" . "LINK TO LOGIN: http://qr.wadisa.com/login<br><br>\n\n" . "Greetings<br><br>\n\n";
+        $mail->Body = $message;
         $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 //Attach an image file
         //$mail->addAttachment('images/phpmailer_mini.png');
@@ -156,7 +161,58 @@ class USER {
             return true;
         }
     }
+    
+    
+    public function sendmailer_withAtt($email_address, $file) {
+//Create a new PHPMailer instance
+        $mail = new PHPMailer;
+//Tell PHPMailer to use SMTP
+        $mail->isSMTP();
+//Enable SMTP debugging
+// 0 = off (for production use)
+// 1 = client messages
+// 2 = client and server messages
+        $mail->SMTPDebug = 0;
+//Ask for HTML-friendly debug output
+        $mail->Debugoutput = 'html';
+//Set the hostname of the mail server
+        $mail->Host = "wadisa.com";
+//Set the SMTP port number - likely to be 25, 465 or 587
+        $mail->Port = 25;
+//Whether to use SMTP authentication
+        $mail->SMTPAuth = true;
+//Username to use for SMTP authentication
+        $mail->Username = "admin@wadisa.com";
+//Password to use for SMTP authentication
+        $mail->Password = "jodete2k";
+//Set who the message is to be sent from
+        $mail->setFrom('admin@wadisa.com', 'Admin Wadisa');
+//Set an alternative reply-to address
+        $mail->addReplyTo('admin@wadisa.com', 'Admin Wadisa');
+//Set who the message is to be sent to
+        $mail->addAddress($email_address, ' ');
+//Set the subject line
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'QR IMAGE ';
+//Read an HTML message body from an external file, convert referenced images to embedded,
+//convert HTML into a basic plain-text alternative body
+        //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
+//Replace the plain text body with one created manually
+        $mail->Body = '### QR WADISA ###<br><br>' . $file;
+        $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+//Attach an image file
+        $mail->addAttachment($file);
+//send the message, check for errors
+        if (!$mail->send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+            return false;
+        } else {
+            //echo "Message sent!";
+            return true;
+        }
+    }
 
+    //CLASS TO GENERATE RANDOM STRING ONLY PROVIDE THE NUMBER OF CHARACTERES
     public function generateRandomString($length = 6) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -167,6 +223,7 @@ class USER {
         return $randomString;
     }
 
+    //INTENTA LOGEARSE CON LOGIN Y PASSWORD
     public function doLogin($uname, $upass) {
         try {
             $stmt = $this->conn->prepare("SELECT user_id, user_name, user_pass FROM users WHERE user_name=:uname ");
@@ -189,6 +246,26 @@ class USER {
         }
     }
 
+    //VERIFICA SI EL USUARIO EXISTE EN LA DB
+    public function doCheck($uname) {
+        try {
+            $stmt = $this->conn->prepare("SELECT user_name FROM users WHERE user_name=:uname ");
+            $stmt->execute(array(":uname" => $uname));
+            $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR ";
+            return false;
+        }
+    }
+
+    //ACTUALIZA LA DIRECCION Y EL TELEFONO DEL USUARIO EN CUESTION
     public function update($uid, $address, $phone) {
         try {
             $stmt = $this->conn->prepare("UPDATE users set address=:address, phone=:phone WHERE user_id=:uid ");
@@ -205,6 +282,7 @@ class USER {
         }
     }
 
+    //ACTUALIZA LA CLAVE DEL USUARIO, NECESITA PROVEER USER ID, PASSWORD ORIGINAL Y DOBLE PASSWORD
     public function updatepass($uid, $pass, $rpass, $rpassb) {
 
         try {
@@ -223,7 +301,7 @@ class USER {
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
-
+            echo "DB CONNECTION ERROR ";
             return false;
         }
 
@@ -252,19 +330,24 @@ class USER {
                 return true;
             } catch (PDOException $e) {
                 echo $e->getMessage();
+                echo "DB CONNECTION ERROR ";
+                return false;
             }
         }
     }
 
-    public function updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    //ACTUALIZA LA INFORMACION DE LOS CLIENTES
+    public function updateclient($id, $user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
         try {
             $stmt = $this->conn->prepare("REPLACE INTO clients "
-                    . "(id,name,user_id,lastname,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES "
-                    . "(:id,:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+                    . "(id,name,user_id,lastname,mail,languaje,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES "
+                    . "(:id,:name,:user_id,:lastname,:mail,:languaje,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':lastname', $lastname);
+            $stmt->bindParam(':mail', $mail);
+            $stmt->bindParam(':languaje', $languaje);
             $stmt->bindParam(':address', $address);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':phonee1', $phonee1);
@@ -282,6 +365,9 @@ class USER {
             $stmt->bindParam(':blood', $blood);
             $stmt->execute();
             //echo "DONE";
+            if (isset($mail) AND isset($qr)){
+            self::sendmailer_withAtt($mail, $qr);
+            }
             return true;
         } catch (PDOException $e) {
             //echo $e->getMessage();
@@ -290,12 +376,15 @@ class USER {
         }
     }
 
-    public function addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    //AGREGA UN NUEVO CLIENTE
+    public function addclient($user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
         try {
-            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,mail,languaje,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:mail,:languaje,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':lastname', $lastname);
+            $stmt->bindParam(':mail', $mail);
+            $stmt->bindParam(':languaje', $languaje);
             $stmt->bindParam(':address', $address);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':phonee1', $phonee1);
@@ -313,6 +402,9 @@ class USER {
             $stmt->bindParam(':blood', $blood);
             $stmt->execute();
             //echo "DONE";
+            if (isset($mail) AND isset($qr)){
+            self::sendmailer_withAtt($mail, $qr);
+            }
             return true;
         } catch (PDOException $e) {
             //echo $e->getMessage();
@@ -321,6 +413,7 @@ class USER {
         }
     }
 
+    //VERIFICA SI LA SESION ESTA CREADA
     public function is_loggedin() {
         if (isset($_SESSION['user_session'])) {
             return true;
@@ -329,10 +422,12 @@ class USER {
         }
     }
 
+    //HACE UNA REDURECCION DEL CLIENTE CONECTADO
     public function redirect($url) {
         header("Location: $url");
     }
 
+    //DESTRUYE LA SESION Y TODOS LOS ELEMENTOS CREADOS:
     public function doLogout() {
         session_destroy();
         unset($_SESSION['user_session']);
@@ -351,7 +446,6 @@ class QrGenerator {
 // how to build raw content - QRCode with detailed Business Card (VCard) 
         //$imagesQR = array();
         $tempDir = "tmp/image";
-
 // here our data 
         $name = $results[0]['name'];
         $uid = $results[0]['id'];
@@ -367,7 +461,6 @@ class QrGenerator {
         $gps = $results[0]['gps'];
         $logo = $results[0]['logo'];
         $languaje = $results[0]['languaje'];
-
 // medical data data 
         $blood = $results[0]['blood'];
         $medicine = $results[0]['medicine'];
@@ -375,7 +468,6 @@ class QrGenerator {
         $drname = $results[0]['drname'];
         $drphone = $results[0]['drphone'];
         $detail = $results[0]['detail'];
-
 // if not used - leave blank! 
         $addressLabel = 'home';
         $addressPobox = '';
@@ -385,13 +477,9 @@ class QrGenerator {
         $addressRegion = $results[0]['region'];
         $addressPostCode = $results[0]['cp'];
         $addressCountry = $results[0]['country'];
-
-
-
 //NOTE with all the rest of data
 //
         $note = 'BLOOD:' . $blood . '______ MEDICINE:' . $medicine . ' _______ ALERGY:' . $alergy . ' _______DR NAME:' . $drname . ' _______ DR PHONE:' . $drphone . ' _______ DETAILS: ' . $detail . '';
-
 //
 // we building raw data 
         $codeContents = 'BEGIN:VCARD' . "\n";
@@ -410,7 +498,6 @@ class QrGenerator {
         $codeContents .= 'TEL;WORK;VOICE:' . $phonePrivate . "\n";
         $codeContents .= 'TEL;TYPE=cell:' . $phoneCell . "\n";
         $codeContents .= 'NOTE:' . $note . "\n";
-
         $codeContents .= 'ADR;TYPE=HOME;' .
                 'LABEL="' . $addressLabel . '":'
                 . $addressPobox . ';'
@@ -423,31 +510,31 @@ class QrGenerator {
                 . "\n";
         $codeContents .= 'EMAIL:' . $email . "\n";
         $codeContents .= 'END:VCARD';
-
         $codeContentsLink = $actual_link;
 // we need to generate filename somehow,  
 // with md5 or with database ID used to obtains $codeContents... 
         $fileName = '_UID:' . $user_id . '_CID:' . $uid . '_' . md5($codeContents) . '.png';
         $fileNamelink = '_UID:' . $user_id . '_CID:' . $uid . '_' . md5($codeContents) . 'link.png';
-
+        $temp = '_UID:' . $user_id . '_CID:' . $uid . '_';
+        $mask = $tempDir . $temp . '*';
         $pngAbsoluteFilePath = $tempDir . $fileName;
         $pngAbsoluteFilePathlink = $tempDir . $fileNamelink;
 // generating 
         if (!file_exists($pngAbsoluteFilePath)) {
+            array_map( "unlink", glob( $mask ) );
             QRcode::png($codeContents, $pngAbsoluteFilePath, "L", 4, 4);
         }
         if (!file_exists($pngAbsoluteFilePathlink)) {
-            QRcode::png($codeContentsLink, $pngAbsoluteFilePathlink, "H", 4, 4);
+            //array_map( "unlink", glob( $mask ) );
+            QRcode::png($codeContentsLink, $pngAbsoluteFilePathlink, "L", 4, 4);
         }
         return array($pngAbsoluteFilePath, $pngAbsoluteFilePathlink);
     }
-
 }
 
 /// START POST METHODS
 
 $login = new USER();
-
 
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'login') {
     $uname = strip_tags(filter_input(INPUT_POST, 'user'));
@@ -455,13 +542,19 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'login') {
     $sec = strip_tags(filter_input(INPUT_POST, 'sec'));
 
     if ($sec == $val3) {
+        if (!$login->doCheck($uname)) {
+            $error = "Wrong Credentials !";
+            echo "User dont exist, please <a href='registrarme.php'> create a new account </a>";
+            return false;
+        }
+
         if ($login->doLogin($uname, $upass)) {
             //$login->redirect('../home/index.php');
             echo "DONE";
             return true;
         } else {
             $error = "Wrong Credentials !";
-            echo "AUTHENTICATION ERROR";
+            echo "AUTHENTICATION ERROR.";
             return false;
         }
     } else {
@@ -469,8 +562,6 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'login') {
         return false;
     }
 }
-
-
 
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'register') {
     $uname = strip_tags(filter_input(INPUT_POST, 'user'));
@@ -527,7 +618,6 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'register') {
     }
 }
 
-
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'update') {
     $uid = strip_tags(filter_input(INPUT_POST, 'userid'));
     $uname = strip_tags(filter_input(INPUT_POST, 'user'));
@@ -545,7 +635,6 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'update') {
         return false;
     }
 }
-
 
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updatepass') {
     $uid = strip_tags(filter_input(INPUT_POST, 'userid'));
@@ -565,14 +654,13 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updatepass') {
     }
 }
 
-
-
-
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $id = strip_tags(filter_input(INPUT_POST, 'id'));
     $user_id = strip_tags(filter_input(INPUT_POST, 'userid'));
     $name = strip_tags(filter_input(INPUT_POST, 'name'));
     $lastname = strip_tags(filter_input(INPUT_POST, 'lastname'));
+    $mail = strip_tags(filter_input(INPUT_POST, 'mail'));
+    $languaje = strip_tags(filter_input(INPUT_POST, 'languaje'));
     $address = strip_tags(filter_input(INPUT_POST, 'address'));
     $phone = strip_tags(filter_input(INPUT_POST, 'phone'));
     $phonee1 = strip_tags(filter_input(INPUT_POST, 'phonee1'));
@@ -588,22 +676,23 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
 
-    if ($login->updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr,$qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+    if ($login->updateclient($id, $user_id, $name, $lastname,$mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;
     } else {
         $error = "Wrong Credentials !";
-        echo "UPDATE ERROR";
+        echo "UPDATE CLIENT ERROR";
         return false;
     }
 }
-
 
 if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'addclient') {
     $user_id = strip_tags(filter_input(INPUT_POST, 'userid'));
     $name = strip_tags(filter_input(INPUT_POST, 'name'));
     $lastname = strip_tags(filter_input(INPUT_POST, 'lastname'));
+    $mail = strip_tags(filter_input(INPUT_POST, 'mail'));
+    $languaje = strip_tags(filter_input(INPUT_POST, 'languaje'));
     $address = strip_tags(filter_input(INPUT_POST, 'address'));
     $phone = strip_tags(filter_input(INPUT_POST, 'phone'));
     $phonee1 = strip_tags(filter_input(INPUT_POST, 'phonee1'));
@@ -619,13 +708,13 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'addclient') {
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
 
-    if ($login->addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+    if ($login->addclient($user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;
     } else {
         $error = "Wrong Credentials !";
-        echo " UPDATE ERROR ";
+        echo " ADD CLIENT ERROR ";
         return false;
     }
 }
