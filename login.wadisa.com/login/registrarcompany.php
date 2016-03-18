@@ -7,6 +7,8 @@ if($user->is_loggedin())
 {
 	$user->redirect('../home/index.php');
 }
+
+ 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -96,7 +98,6 @@ if($user->is_loggedin())
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">REGISTER</h2>
                     <h3 class="section-subheading text-muted">Register is need by access to our services</h3>
-                    <h3 class="section-subheading text-muted">* obligatory fields</h3>
                 </div>
             </div>
            
@@ -124,14 +125,14 @@ if($user->is_loggedin())
                             <div class="col-md-6">
                                 <div style="margin-bottom: 25px" class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
-                                      <input class="form-control" placeholder="If you are human please sum <?php echo $val1?>+<?php echo $val2?>? *" id="sec" required data-validation-required-message="Please enter a message.">
+                                      <input class="form-control" placeholder="If you are human please sum <?php echo $val1?>+<?php echo $val2?>?" id="sec" required data-validation-required-message="Please enter a message.">
                                     <p class="help-block text-danger"></p>
                                 </div>
                                 <input type="hidden" name="type" class="form-control" id="type" value="register">  
                             
                                 <div style="margin-bottom: 25px" class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-eye-open"></i></span>
-                                      <input class="form-control" placeholder="Enterprise Code " id="code">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-gift"></i></span>
+                                      <input class="form-control" placeholder="Promo code" id="code">
                                     <p class="help-block text-danger"></p>
                                 </div>
                             </div>

@@ -11,6 +11,7 @@ if (!$auth_user->is_loggedin()) {
 $stmt = $auth_user->runQuery("SELECT * FROM users WHERE user_id=:user_id");
 $stmt->execute(array(":user_id" => $user_id));
 $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+$_SESSION['company_code'] = $userRow['code'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -159,6 +160,11 @@ $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="type" class="form-control" id="type" value="update">  
                                 <input type="hidden" name="rpass" class="form-control" id="rpass" value="rpass"> 
                                 <div class="col-md-6">
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-eye-open"></i></span>
+                                        <input class="form-control" value="Company code: <?php echo " " . $userRow['code'] . " "; ?>" id="creacion" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
                                         <input class="form-control" value="Beginig date: <?php echo " " . $userRow['joining_date'] . " "; ?>" id="creacion" disabled>

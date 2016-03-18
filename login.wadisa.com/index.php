@@ -68,7 +68,7 @@
                             <a class="page-scroll" href="login/index.php" >Login</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="login/registrarme.php">Register</a>
+                            <a class="page-scroll" href="login/registrarme.php">Register user</a>
                         </li>
                         <li>
                             <a class="page-scroll" href="login/password.php">Password Retrieve</a>

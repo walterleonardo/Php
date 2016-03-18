@@ -29,6 +29,8 @@ $(function () {
             var name = $("input#name").val();
             var lastname = $("input#lastname").val();
             var qr = $("input#qr").val();
+            var qrlink = $("input#qrlink").val();
+            var code = $("input#code").val();
             var firstName = user; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
             if (firstName.indexOf(' ') >= 0) {
@@ -49,8 +51,10 @@ $(function () {
                     drname: drname,
                     drphone: drphone,
                     qr: qr,
+                    qrlink: qrlink,
                     id: id,
                     userid: userid,
+                    code: code,
                     btnlogin: btnlogin,
                     user: user,
                     sec: sec,

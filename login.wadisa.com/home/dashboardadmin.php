@@ -3,24 +3,12 @@ require_once("../config/session.php");
 require_once("../config/class.user.php");
 include_once 'phpqrcode/qrlib.php';
 $auth_user = new USER();
-$user_id = $_SESSION['user_session'];
-
-$sql = "SELECT * FROM clients WHERE user_id=$user_id";
-$stmt = $auth_user->runQuery($sql);
-$stmt->execute();
-$cuenta = $stmt->rowCount();
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-if (!$auth_user->is_loggedin()) {
-    $auth_user->redirect('../login/index.php');
-}
-
-
-$actual_link = 'http://'.$_SERVER[HTTP_HOST].'/home/dashboardshow.php'.'?btn-update=enable&type=load&userid='.$user_id.'&clientid='.$uid ;
-
+$user_id_name = $_SESSION['user_session'];
+$user_id = $_SESSION['company_code'];
 
 if (isset($_POST['userid'])){
 $uid = strip_tags($_POST['userid']);
+$_SESSION['user_id'] = $uid;
 $sql = "SELECT * FROM clients WHERE id=$uid";
 $stmt = $auth_user->runQuery($sql);
 $stmt->execute();
@@ -28,10 +16,48 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $button = "UPDATE";
 $action = "updateclient";
 
+$actual_link = 'http://'.$_SERVER[HTTP_HOST].'/home/dashboardshow.php'.'?btn-update=enable&type=load&userid='.$user_id.'&clientid='.$uid ;
+
 //CREAMON UNA INSTANCIA DE QR
 $qr = new QrGenerator();
 $imageName = $qr->qrGen($results,$actual_link);
+
+
+} else if (isset($_SESSION['user_id'])){
+//
+$uid=$_SESSION['user_id'];
+$sql = "SELECT * FROM clients WHERE id=$uid";
+$stmt = $auth_user->runQuery($sql);
+$stmt->execute();
+$cuenta = $stmt->rowCount();
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//CREAMON UNA INSTANCIA DE QR
+$actual_link = 'http://'.$_SERVER[HTTP_HOST].'/home/dashboardshow.php'.'?btn-update=enable&type=load&userid='.$user_id.'&clientid='.$uid;
+$qr = new QrGenerator();
+$imageName = $qr->qrGen($results,$actual_link);
+$button = "UPDATE";
+$action = "updateclient";
 }
+
+
+if (!$auth_user->is_loggedin()) {
+    $auth_user->redirect('../login/index.php');
+}
+
+$sql_user = "SELECT * FROM users WHERE user_id=$user_id_name";
+$stmt_user = $auth_user->runQuery($sql_user);
+$stmt_user->execute();
+$results_user = $stmt_user->fetchAll(PDO::FETCH_ASSOC);
+
+if (!$results_user[0]['admin']) {
+    $auth_user->redirect('../home/index.php');
+}
+
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -98,8 +124,8 @@ $imageName = $qr->qrGen($results,$actual_link);
                             <a class="page-scroll" href="index.php">HOME</a>
                         </li>
                         <?php
-                        if ($userRow['admin']) {
-                            echo "<li>";
+                        if ($results_user[0]['admin']) {
+                           echo "<li>";
                             echo "<a class='page-scroll' href='dashboard.php' >ADMIN</a>";
                             echo "</li>";
                             echo "<li>";
@@ -124,8 +150,8 @@ $imageName = $qr->qrGen($results,$actual_link);
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading">INFORMATION</h2>
                         <h3 class="section-subheading text-muted">.</h3>
-                        <h3><?php echo "USER ID " . $results[0]['user_id'] . ""; ?></h3>
-                        <h3><?php echo "CLIENT ID " . $results[0]['id'] . "";?></h3>
+                        <h3><?php echo "COMPANY ID " . $user_id . ""; ?></h3>
+                        <h3><?php echo "CLIENT ID " . $uid . "";?></h3>
                         <a href="<?php echo $actual_link;?>"><?php echo $actual_link;?></a>
                         <br>
                         <br>
@@ -138,7 +164,7 @@ $imageName = $qr->qrGen($results,$actual_link);
                             <div class="row">
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon">ID</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['id'])) {
@@ -152,13 +178,13 @@ $imageName = $qr->qrGen($results,$actual_link);
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['name'])) {
                                                    ?>placeholder="Name *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['name'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['name']; ?>"<?php
                                                }
                                                ?>
                                                id="name">
@@ -166,39 +192,78 @@ $imageName = $qr->qrGen($results,$actual_link);
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> LASTNAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['lastname'])) {
                                                    ?>placeholder="LastName *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['lastname'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['lastname']; ?>"<?php
                                                }
                                                ?>
                                                id="lastname">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> ADDRESS</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['address'])) {
                                                    ?>placeholder="Address *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['address'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['address']; ?>"<?php
                                                }
                                                ?>
                                                id="address" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> TOWN</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['town'])) {
+                                                   ?>placeholder="Town *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['town']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> COUNTRY</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['country'])) {
+                                                   ?>placeholder="Country *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['country']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> POSTAL CODE</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['cp'])) {
+                                                   ?>placeholder="Postal Code *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['cp']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> CONTACT</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
                                                if (empty($results[0]['phone'])) {
                                                    ?>placeholder="Contact phone +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phone'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phone']; ?>"<?php
                                                }
                                                ?>
                                                id="phone" autocomplete="off" >
@@ -206,13 +271,13 @@ $imageName = $qr->qrGen($results,$actual_link);
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 1</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
                                                if (empty($results[0]['phonee1'])) {
                                                    ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phonee1'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phonee1']; ?>"<?php
                                                }
                                                ?>
                                                id="phonee1" autocomplete="off" >
@@ -220,13 +285,13 @@ $imageName = $qr->qrGen($results,$actual_link);
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
                                             <?php
                                                if (empty($results[0]['phonee2'])) {
                                                    ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phonee2'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phonee2']; ?>"<?php
                                                }
                                                ?>
                                                id="phonee2" autocomplete="off" >
@@ -234,108 +299,109 @@ $imageName = $qr->qrGen($results,$actual_link);
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
 <?php echo '<img src="' . $imageName[0] . '" />'; ?>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
                                 <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $results[0]['user_id'] ?>"> 
-                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>">  
-                                <input type="hidden" name="pass" class="form-control" id="pass" value="<?php echo $results[0]['name'] ?>"> 
+                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>"> 
+                                 <input type="hidden" name="qr" class="form-control" id="qr" value="<?php echo $imageName[0] ?>"> 
+                                <input type="hidden" name="qrlink" class="form-control" id="qrlink" value="<?php echo $actual_link ?>"> 
                                 <input type="hidden" name="type" class="form-control" id="type" value="updateclient">  
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="Joining Date: <?php echo " " . $results[0]['joining_date'] . " "; ?>" id="joining_date" disabled>
+                                        <input class="form-control" value="JOINING DATE: <?php echo $results[0]['joining_date']; ?>" id="joining_date_1" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="End date account: <?php echo " " . $results[0]['end_date'] . " "; ?>" id="end_date" disabled>
+                                        <input class="form-control" value="UPDATE DETAIL: <?php echo $results[0]['end_date']; ?>" id="end_date_1" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" 
-                                                                          <?php
-                                               if (empty($results[0]['alergy'])) {
-                                                   ?>placeholder="Include Alergies *"<?php
-                                               } else {
-                                                   ?>value="<?php echo "" . $results[0]['alergy'] . ""; ?>"<?php
-                                               }
-                                               ?> id="alergy" >
-                                        <p class="help-block text-danger"></p>
-                                    </div>
+                                    
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
                                         <input class="form-control"
                                                <?php
                                                if (empty($results[0]['drname'])) {
                                                    ?>placeholder="Doctor Name *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['drname'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['drname']; ?>"<?php
                                                }
                                                ?> id="drname" >
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['drphone'])) {
                                                    ?>placeholder="Doctor Phone *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['drphone'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['drphone']; ?>"<?php
                                                }
                                                ?>  id="drphone" >
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['detail'])) {
                                                    ?>placeholder="Detail info *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['detail'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['detail']; ?>"<?php
                                                }
                                                ?> id="detail" >
                                         <p class="help-block text-danger"></p>
                                     </div>
-
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
+                                        <input class="form-control" 
+                                                                          <?php
+                                               if (empty($results[0]['alergy'])) {
+                                                   ?>placeholder="Include Alergies *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['alergy']; ?>"<?php
+                                               }
+                                               ?> id="alergy" >
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['medicine'])) {
                                                    ?>placeholder="Medicine info *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['medicine'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['medicine']; ?>"<?php
                                                }
                                                ?> id="medicine" >
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['blood'])) {
                                                    ?>placeholder="Blood info *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['blood']; ?>"<?php
                                                }
                                                ?> id="blood" >
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> LINK</i></span>
 <?php echo '<img src="' . $imageName[1] . '" />'; ?>
                                         <p class="help-block text-danger"></p>
                                     </div>
@@ -347,6 +413,7 @@ $imageName = $qr->qrGen($results,$actual_link);
                                 <div class="col-lg-12 text-center">
                                     <div id="success"></div>
                                     <button type="submit" class="btn btn-xl"><?php echo $button; ?></button>
+                                    <a href="dashboard.php" class="btn btn-xl">BACK</a>
                                 </div>
                             </div>
                         </form>
@@ -386,7 +453,7 @@ $imageName = $qr->qrGen($results,$actual_link);
                 </div>
             </div>
         </footer>
-        <!-- /container -->
+    <!-- /container -->
         <!-- jQuery Version 1.11.0 -->
         <script src="../js/jquery-1.11.0.js"></script>
 
@@ -405,6 +472,25 @@ $imageName = $qr->qrGen($results,$actual_link);
 
         <!-- Custom Theme JavaScript -->
         <script src="../js/agency.js"></script>
-        <!-- Script para grafico de barras -->
+
+        <!-- Piwik -->
+        <script type="text/javascript">
+            var _paq = _paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function () {
+                var u = (("https:" == document.location.protocol) ? "https" : "http") + "://piwik.walii.es/";
+                _paq.push(['setTrackerUrl', u + 'piwik.php']);
+                _paq.push(['setSiteId', 1]);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.type = 'text/javascript';
+                g.defer = true;
+                g.async = true;
+                g.src = u + 'piwik.js';
+                s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->    
     </body>
 </html>

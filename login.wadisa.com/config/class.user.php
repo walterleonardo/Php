@@ -27,13 +27,14 @@ class USER {
         return $stmt;
     }
 
-    public function register($uname, $upass) {
+    public function register($uname, $upass,$code=0) {
         try {
             $new_password = password_hash($upass, PASSWORD_DEFAULT);
 
-            $stmt = $this->conn->prepare("INSERT INTO users(user_name,user_pass) VALUES(:uname, :upass)");
+            $stmt = $this->conn->prepare("INSERT INTO users(user_name,user_pass,code) VALUES(:uname, :upass, :code)");
             $stmt->bindparam(":uname", $uname);
             $stmt->bindparam(":upass", $new_password);
+            $stmt->bindparam(":code", $code);
             $stmt->execute();
             $stmt1 = $this->conn->prepare("SELECT user_id, user_name, user_pass FROM users WHERE user_name=:uname ");
             $stmt1->execute(array(":uname" => $uname));
@@ -44,14 +45,30 @@ class USER {
             //echo "DONE";
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo " DB CONNECTION ERROR ";
+            return false;
+        }
+    }
+    
+    public function deleteClient($uid,$user_id) {
+        try {
+            $stmt = $this->conn->prepare("DELETE FROM clients WHERE id=:uid AND user_id=:user_id");
+            $stmt->bindparam(":uid", $uid);
+            $stmt->bindparam(":user_id", $user_id);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            echo " DB CONNECTION ERROR ";
+            return false;
         }
     }
 
     public function sendpass($uname) {
         try {
 
-            $upass = self::generateRandomString(8);//number of characters.
+            $upass = self::generateRandomString(8); //number of characters.
             $new_password = password_hash($upass, PASSWORD_DEFAULT);
             $stmt = $this->conn->prepare("UPDATE users set user_pass=:upass WHERE user_name=:uname ");
             $stmt->bindparam(":uname", $uname);
@@ -65,24 +82,30 @@ class USER {
                 return false;
             }
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR ";
             return false;
         }
     }
 
-    public function sendmail($email_address, $message) {
-// Create the email and send the message
-        $to = $email_address; // Add your email address inbetween the '' replacing yourname@yourdomain.com - This is where the form will send a message to.
-        $email_subject = "Password retrieve";
-        $email_body = "Hi.\n\n" . "You are requested a new password.\n\n" . "Here you have the new password: $message\n\n" . "LINK TO LOGIN: http://qr.wadisa.com/login\n\n" . "Greetings\n\n";
-        $headers = "From: noreply@wadisa.com\n";
-// This is the email address the generated message will be from. We recommend using something like noreply@yourdomain.com.
-        //$headers .= "Reply-To: $email_address";
-        if (mail($to, $email_subject, $email_body, $headers)) {
-            return true;
-        } else {
+    public function search($search_term,$user_id,$limit = 10) {
+        // Sanitize the search term to prevent injection attacks
+        $sanitized = "%".$search_term."%";
+        $stmt = $this->conn->prepare("SELECT * FROM clients WHERE (user_id=:user_id AND name LIKE :sanitized)
+      OR (user_id=:user_id AND lastname LIKE :sanitized) ORDER BY id DESC LIMIT $limit");
+        $stmt->bindparam(":user_id", $user_id);
+        $stmt->bindparam(":sanitized", $sanitized);
+        //$stmt->bindparam(":limit", $limit);
+        $stmt->execute();
+        $cuenta = $stmt->rowCount();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Check results
+        if ($cuenta == 0) {
+            //echo "NOT FOUND";
             return false;
         }
+        return $results;
     }
 
     public function sendmailer($email_address, $message) {
@@ -121,11 +144,9 @@ class USER {
         //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
 //Replace the plain text body with one created manually
         $mail->Body = "Hi.<br><br>\n\n" . "You are requested a new password from wadisa.<br>\n\n" . "Here you have the new password: <b>$message</b> <br>\n\n" . "LINK TO LOGIN: http://qr.wadisa.com/login<br><br>\n\n" . "Greetings<br><br>\n\n";
-        $mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
-
+        $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 //Attach an image file
         //$mail->addAttachment('images/phpmailer_mini.png');
-
 //send the message, check for errors
         if (!$mail->send()) {
             echo "Mailer Error: " . $mail->ErrorInfo;
@@ -162,6 +183,9 @@ class USER {
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR ";
+            return false;
         }
     }
 
@@ -175,7 +199,9 @@ class USER {
             //echo "DONE";
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR ";
+            return false;
         }
     }
 
@@ -230,11 +256,11 @@ class USER {
         }
     }
 
-    public function updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    public function updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
         try {
             $stmt = $this->conn->prepare("REPLACE INTO clients "
-                    . "(id,name,user_id,lastname,address,phone,phonee1,phonee2,qr,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES "
-                    . "(:id,:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+                    . "(id,name,user_id,lastname,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES "
+                    . "(:id,:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
@@ -244,6 +270,7 @@ class USER {
             $stmt->bindParam(':phonee1', $phonee1);
             $stmt->bindParam(':phonee2', $phonee2);
             $stmt->bindParam(':qr', $qr);
+            $stmt->bindParam(':qrlink', $qrlink);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':joining_date', $joining_date);
             $stmt->bindParam(':end_date', $end_date);
@@ -257,14 +284,15 @@ class USER {
             //echo "DONE";
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR";
             return false;
         }
     }
 
-    public function addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    public function addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
         try {
-            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,address,phone,phonee1,phonee2,qr,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':lastname', $lastname);
@@ -273,6 +301,7 @@ class USER {
             $stmt->bindParam(':phonee1', $phonee1);
             $stmt->bindParam(':phonee2', $phonee2);
             $stmt->bindParam(':qr', $qr);
+            $stmt->bindParam(':qrlink', $qrlink);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':joining_date', $joining_date);
             $stmt->bindParam(':end_date', $end_date);
@@ -286,7 +315,8 @@ class USER {
             //echo "DONE";
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            echo "DB CONNECTION ERROR";
             return false;
         }
     }
@@ -306,6 +336,8 @@ class USER {
     public function doLogout() {
         session_destroy();
         unset($_SESSION['user_session']);
+        unset($_SESSION['company_code']);
+        unset($_SESSION['user_id']);
         return true;
     }
 
@@ -317,7 +349,7 @@ class QrGenerator {
     public function qrGen($results, $actual_link) {
         //QR STYLE
 // how to build raw content - QRCode with detailed Business Card (VCard) 
-        $imagesQR = array();
+        //$imagesQR = array();
         $tempDir = "tmp/image";
 
 // here our data 
@@ -373,7 +405,7 @@ class QrGenerator {
         $codeContents .= 'LANG:' . $logo . "\n"; //LOGO;PNG:http://example.com/logo.png
         $codeContents .= 'logo:' . $languaje . "\n";
         $codeContents .= 'TITLE:' . $orgName . "\n";
-        $codeContents .= 'URL:' . $orgName . "\n";
+        $codeContents .= 'URL:' . $url . "\n";
         $codeContents .= 'TEL;HOME;VOICE:' . $phone . "\n";
         $codeContents .= 'TEL;WORK;VOICE:' . $phonePrivate . "\n";
         $codeContents .= 'TEL;TYPE=cell:' . $phoneCell . "\n";
@@ -444,6 +476,7 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'register') {
     $uname = strip_tags(filter_input(INPUT_POST, 'user'));
     $upass = strip_tags(filter_input(INPUT_POST, 'pass'));
     $rpass = strip_tags(filter_input(INPUT_POST, 'rpass'));
+    $code = strip_tags(filter_input(INPUT_POST, 'code'));
     $sec = strip_tags(filter_input(INPUT_POST, 'sec'));
 
     if ($uname == "") {
@@ -480,7 +513,7 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'register') {
                 echo "sorry username or mail already taken !";
                 return false;
             } else {
-                if ($login->register($uname, $upass)) {
+                if ($login->register($uname, $upass, $code)) {
                     //$login->redirect('../login/index.php?joined');
                     echo "DONE";
                     return true;
@@ -545,6 +578,7 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $phonee1 = strip_tags(filter_input(INPUT_POST, 'phonee1'));
     $phonee2 = strip_tags(filter_input(INPUT_POST, 'phonee2'));
     $qr = strip_tags(filter_input(INPUT_POST, 'qr'));
+    $qrlink = strip_tags(filter_input(INPUT_POST, 'qrlink'));
     $joining_date = strip_tags(filter_input(INPUT_POST, 'joining_date'));
     $end_date = strip_tags(filter_input(INPUT_POST, 'end_date'));
     $alergy = strip_tags(filter_input(INPUT_POST, 'alergy'));
@@ -554,7 +588,7 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
 
-    if ($login->updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+    if ($login->updateclient($id, $user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr,$qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;
@@ -575,6 +609,7 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'addclient') {
     $phonee1 = strip_tags(filter_input(INPUT_POST, 'phonee1'));
     $phonee2 = strip_tags(filter_input(INPUT_POST, 'phonee2'));
     $qr = strip_tags(filter_input(INPUT_POST, 'qr'));
+    $qrlink = strip_tags(filter_input(INPUT_POST, 'qrlink'));
     $joining_date = strip_tags(filter_input(INPUT_POST, 'joining_date'));
     $end_date = strip_tags(filter_input(INPUT_POST, 'end_date'));
     $alergy = strip_tags(filter_input(INPUT_POST, 'alergy'));
@@ -584,13 +619,13 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'addclient') {
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
 
-    if ($login->addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+    if ($login->addclient($user_id, $name, $lastname, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;
     } else {
         $error = "Wrong Credentials !";
-        echo "UPDATE ERROR";
+        echo " UPDATE ERROR ";
         return false;
     }
 }

@@ -79,9 +79,7 @@ if (isset($_GET['btn-update'])) {
                         <li class="hidden">
                             <a href="#page-top"></a>
                         </li>
-                        <li>
-                            <a class="page-scroll" href="index.php" >HOME</a>
-                        </li>
+                        
                     </ul>
                 </div>
                 <! -- /.navbar-collapse -->
@@ -102,7 +100,7 @@ if (isset($_GET['btn-update'])) {
                             <div class="row">
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                         if (empty($results[0]['name'])) {
@@ -116,7 +114,7 @@ if (isset($_GET['btn-update'])) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> LASTNAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                         if (empty($results[0]['lastname'])) {
@@ -129,7 +127,7 @@ if (isset($_GET['btn-update'])) {
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> ADDRESS</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                         if (empty($results[0]['address'])) {
@@ -142,7 +140,46 @@ if (isset($_GET['btn-update'])) {
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> TOWN</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['town'])) {
+                                                   ?>placeholder="Town *"<?php
+                                               } else {
+                                                   ?>value="<?php echo "" . $results[0]['town'] . ""; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> COUNTRY</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['country'])) {
+                                                   ?>placeholder="Country *"<?php
+                                               } else {
+                                                   ?>value="<?php echo "" . $results[0]['country'] . ""; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> POSTAL CODE</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['cp'])) {
+                                                   ?>placeholder="Postal Code *"<?php
+                                               } else {
+                                                   ?>value="<?php echo "" . $results[0]['cp'] . ""; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> CONTACT</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
                                         if (empty($results[0]['phone'])) {
@@ -156,13 +193,13 @@ if (isset($_GET['btn-update'])) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 1</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                        if (empty($results[0]['phone2'])) {
+                                        if (empty($results[0]['phonee1'])) {
                                             ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phone2'] . ""; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['phonee1'] . ""; ?>"<?php
                                                }
                                                ?>
                                                id="phonee1" autocomplete="off" disabled>
@@ -170,13 +207,13 @@ if (isset($_GET['btn-update'])) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                        if (empty($results[0]['phone3'])) {
+                                        if (empty($results[0]['phonee2'])) {
                                             ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phone3'] . ""; ?>"<?php
+                                                   ?>value="<?php echo "" . $results[0]['phonee2'] . ""; ?>"<?php
                                                }
                                                ?>
                                                id="phonee2" autocomplete="off" disabled>
@@ -184,66 +221,58 @@ if (isset($_GET['btn-update'])) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"></i></span>
-                                        <input type="text" class="form-control" 
-                                        <?php
-                                        if (empty($results[0]['qr'])) {
-                                            ?>placeholder="QR *"<?php
-                                               } else {
-                                                   ?>value="<?php echo "" . $results[0]['qr'] . ""; ?>"<?php
-                                               }
-                                               ?>
-                                               id="qr" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
+                                        <img src="<?php echo $results[0]['qr']?>" alt=""> 
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
                                 <input type="hidden" name="type" class="form-control" id="type" value="<?php echo $action; ?>">  
                                 <div class="col-md-6">
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                                        <input class="form-control" value="Cuenta creada: <?php echo " " . $results[0]['joining_date'] . " "; ?>" id="joining_date" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <input class="form-control" value="JOINING DATE: <?php echo " " . $results[0]['joining_date'] . " "; ?>" id="joining_date" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                        <input class="form-control" value="Cuenta válida hasta: <?php echo " " . $results[0]['end_date'] . " "; ?>" id="end_date" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <input class="form-control" value="UPDATE DETAIL: <?php echo " " . $results[0]['end_date'] . " "; ?>" id="end_date" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+
+                                    
+
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['drname']; ?>" id="drname" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                                        <input class="form-control" value="Alergies: <?php echo " " . $results[0]['alergy'] . " "; ?>" id="alergy" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['drphone']; ?>" id="drphone" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                        <input class="form-control" value="DR: <?php echo " " . $results[0]['drname'] . " "; ?>" id="drname" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['detail']; ?>" id="detail" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['alergy']; ?>" id="alergy" disabled>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['medicine']; ?>" id="medicine" disabled >
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                                        <input class="form-control" value="DR phone: <?php echo " " . $results[0]['drphone'] . " "; ?>" id="drphone" disabled>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                        <input class="form-control" value="Detail: <?php echo " " . $results[0]['detail'] . " "; ?>" id="detail" disabled>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                                        <input class="form-control" value="Medicine: <?php echo " " . $results[0]['medicine'] . " "; ?>" id="medicine" disabled >
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                                        <input class="form-control" value="Blood: <?php echo " " . $results[0]['blood'] . " "; ?>" id="blood" disabled>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
+                                        <input class="form-control" value="<?php echo $results[0]['blood']; ?>" id="blood" disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
@@ -289,22 +318,45 @@ if (isset($_GET['btn-update'])) {
                 </div>
             </div>
         </footer>
-        <!-- /container -->
-        <!-- jQuery Version 1.11.0 
-        <script src="../js/jquery-1.11.0.js"></script>-->
+       <!-- /container -->
+        <!-- jQuery Version 1.11.0 -->
+        <script src="../js/jquery-1.11.0.js"></script>
+
         <!-- Bootstrap Core JavaScript -->
         <script src="../js/bootstrap.min.js"></script>
-        <!-- Plugin JavaScript 
-            <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>-->
 
+        <!-- Plugin JavaScript -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
         <script src="../js/classie.js"></script>
         <script src="../js/cbpAnimatedHeader.js"></script>
+
         <!-- Contact Form JavaScript -->
         <script src="../js/jqBootstrapValidation.js"></script>
-        <!-- <script src="../js/login_me.js"></script>-->
+        <!-- <script src="actualizar_me.js"></script>-->
+        <script src="../js/access_db.js"></script>
+
         <!-- Custom Theme JavaScript -->
-        <script src="../js/agency.js"></script> 
-        <!-- Script para grafico de barras -->
+        <script src="../js/agency.js"></script>
+
+        <!-- Piwik -->
+        <script type="text/javascript">
+            var _paq = _paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function () {
+                var u = (("https:" == document.location.protocol) ? "https" : "http") + "://piwik.walii.es/";
+                _paq.push(['setTrackerUrl', u + 'piwik.php']);
+                _paq.push(['setSiteId', 1]);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.type = 'text/javascript';
+                g.defer = true;
+                g.async = true;
+                g.src = u + 'piwik.js';
+                s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->    
     </body>
 </html>
 

@@ -72,8 +72,11 @@ if ($login->is_loggedin()) {
                         <li>
                             <a class="page-scroll" href="../index.php">HOME</a>
                         </li>
+<!--                        <li>
+                            <a class="page-scroll" href="registrarcompany.php">Register Company</a>
+                        </li>-->
                         <li>
-                            <a class="page-scroll" href="registrarme.php">Register</a>
+                            <a class="page-scroll" href="registrarme.php">Register User</a>
                         </li>
                         <li>
                             <a class="page-scroll" href="password.php">Password Retrieve</a>

@@ -2,19 +2,24 @@
 require_once("../config/session.php");
 require_once("../config/class.user.php");
 $auth_user = new USER();
-$user_id = $_SESSION['user_session'];
+$user_id_name = $_SESSION['user_session'];
+$user_id = $_SESSION['company_code'];
 
-
-
-$sql = "SELECT * FROM clients WHERE user_id=$user_id";
-$stmt = $auth_user->runQuery($sql);
-$stmt->execute();
-$cuenta = $stmt->rowCount();
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (!$auth_user->is_loggedin()) {
     $auth_user->redirect('../login/index.php');
 }
+$sql_user = "SELECT * FROM users WHERE user_id=$user_id_name";
+$stmt_user = $auth_user->runQuery($sql_user);
+$stmt_user->execute();
+$results_user = $stmt_user->fetchAll(PDO::FETCH_ASSOC);
+
+if (!$results_user[0]['admin']) {
+    $auth_user->redirect('../home/index.php');
+}
+
+$button = "UPDATE";
+$action = "updateclient";
 
 
 ?>
@@ -83,12 +88,9 @@ if (!$auth_user->is_loggedin()) {
                             <a class="page-scroll" href="index.php">HOME</a>
                         </li>
                         <?php
-                        if ($userRow['admin']) {
+                        if ($results_user[0]['admin']) {
                             echo "<li>";
                             echo "<a class='page-scroll' href='dashboard.php' >ADMIN</a>";
-                            echo "</li>";
-                            echo "<li>";
-                            echo "<a class='page-scroll' href='dashboardadd.php' >ADD CLIENT</a>";
                             echo "</li>";
                         }
                         ?>
@@ -109,7 +111,7 @@ if (!$auth_user->is_loggedin()) {
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading">INFORMATION</h2>
                         <h3 class="section-subheading text-muted">.</h3>
-                        <h3><?php echo "USER ID " . $user_id . ""; ?></h3>
+                        <h3><?php echo "COMPANY ID " . $user_id . ""; ?></h3>
                         <br>
                         <br>
                     </div>
@@ -127,7 +129,7 @@ if (!$auth_user->is_loggedin()) {
                                                if (empty($results[0]['id'])) {
                                                    ?>placeholder="Id Auto incremented *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['id'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['id']; ?>"<?php
                                                }
                                                ?>
                                                    id="id" disabled>
@@ -135,53 +137,92 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['name'])) {
                                                    ?>placeholder="Name *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['name'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['name']; ?>"<?php
                                                }
                                                ?>
-                                               id="name">
+                                                   id="name" required>
                                         <p class="help-block text-danger"></p>
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> LASTNAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['lastname'])) {
                                                    ?>placeholder="LastName *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['lastname'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['lastname']; ?>"<?php
                                                }
                                                ?>
                                                id="lastname">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> ADDRESS</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
                                                if (empty($results[0]['address'])) {
                                                    ?>placeholder="Address *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['address'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['address']; ?>"<?php
                                                }
                                                ?>
                                                id="address" autocomplete="off">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> TOWN</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['town'])) {
+                                                   ?>placeholder="Town *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['town']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> COUNTRY</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['country'])) {
+                                                   ?>placeholder="Country *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['country']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"> POSTAL CODE</i></span>
+                                        <input type="text" class="form-control" 
+                                        <?php
+                                               if (empty($results[0]['cp'])) {
+                                                   ?>placeholder="Postal Code *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['cp']; ?>"<?php
+                                               }
+                                               ?>
+                                               id="address" autocomplete="off">
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> CONTACT</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
                                                if (empty($results[0]['phone'])) {
                                                    ?>placeholder="Contact phone +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phone'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phone']; ?>"<?php
                                                }
                                                ?>
                                                id="phone" autocomplete="off" >
@@ -189,13 +230,13 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 1</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
                                                if (empty($results[0]['phonee1'])) {
                                                    ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phonee1'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phonee1']; ?>"<?php
                                                }
                                                ?>
                                                id="phonee1" autocomplete="off" >
@@ -203,13 +244,13 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
                                             <?php
                                                if (empty($results[0]['phonee2'])) {
                                                    ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['phonee2'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['phonee2']; ?>"<?php
                                                }
                                                ?>
                                                id="phonee2" autocomplete="off" >
@@ -220,36 +261,14 @@ if (!$auth_user->is_loggedin()) {
                                 </div>
                                 <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $user_id ?>"> 
                                 <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>">  
-                                <input type="hidden" name="pass" class="form-control" id="pass" value="<?php echo $results[0]['name'] ?>"> 
                                 <input type="hidden" name="type" class="form-control" id="type" value="addclient">  
                                 <div class="col-md-6">
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="Joining Date: <?php echo " " . $results[0]['joining_date'] . " "; ?>" id="joining_date" disabled>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
+                                    
+
+                                    
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" value="End date account: <?php echo " " . $results[0]['end_date'] . " "; ?>" id="end_date" disabled>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
-                                        <input class="form-control" 
-                                                                          <?php
-                                               if (empty($results[0]['alergy'])) {
-                                                   ?>placeholder="Include Alergies *"<?php
-                                               } else {
-                                                   ?>value="<?php echo "" . $results[0]['alergy'] . ""; ?>"<?php
-                                               }
-                                               ?> id="alergy" >
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-
-                                    <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
                                         <input class="form-control"
                                                <?php
                                                if (empty($results[0]['drname'])) {
@@ -262,7 +281,7 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['drphone'])) {
@@ -275,7 +294,7 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['detail'])) {
@@ -286,9 +305,20 @@ if (!$auth_user->is_loggedin()) {
                                                ?> id="detail" >
                                         <p class="help-block text-danger"></p>
                                     </div>
-
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
+                                        <input class="form-control" 
+                                                                          <?php
+                                               if (empty($results[0]['alergy'])) {
+                                                   ?>placeholder="Include Alergies *"<?php
+                                               } else {
+                                                   ?>value="<?php echo $results[0]['alergy']; ?>"<?php
+                                               }
+                                               ?> id="alergy" >
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['medicine'])) {
@@ -301,7 +331,7 @@ if (!$auth_user->is_loggedin()) {
                                     </div>
 
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
                                         <input class="form-control" 
                                                <?php
                                                if (empty($results[0]['blood'])) {
@@ -322,6 +352,7 @@ if (!$auth_user->is_loggedin()) {
                                 <div class="col-lg-12 text-center">
                                     <div id="success"></div>
                                     <button type="submit" class="btn btn-xl">ADD</button>
+                                    <a href="dashboard.php" class="btn btn-xl">BACK</a>
                                 </div>
                             </div>
                         </form>
@@ -360,8 +391,7 @@ if (!$auth_user->is_loggedin()) {
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- /container -->
+         <!-- /container -->
         <!-- jQuery Version 1.11.0 -->
         <script src="../js/jquery-1.11.0.js"></script>
 
@@ -380,6 +410,25 @@ if (!$auth_user->is_loggedin()) {
 
         <!-- Custom Theme JavaScript -->
         <script src="../js/agency.js"></script>
-        <!-- Script para grafico de barras -->
+
+        <!-- Piwik -->
+        <script type="text/javascript">
+            var _paq = _paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function () {
+                var u = (("https:" == document.location.protocol) ? "https" : "http") + "://piwik.walii.es/";
+                _paq.push(['setTrackerUrl', u + 'piwik.php']);
+                _paq.push(['setSiteId', 1]);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.type = 'text/javascript';
+                g.defer = true;
+                g.async = true;
+                g.src = u + 'piwik.js';
+                s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->    
     </body>
 </html>
