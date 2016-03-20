@@ -13,17 +13,30 @@ if (strpos(strtolower(filter_input(INPUT_SERVER, 'HTTP_USER_AGENT')), "apple")) 
 }
 
 class USER {
+
     private $conn;
-    
+
     public function __construct() {
         $database = new Database();
-        $db = $database->dbConnection();
-        $this->conn = $db;
+        try {
+            $db = $database->dbConnection();
+            $this->conn = $db;
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            echo " DB CONNECTION ERROR ";
+            return false;
+        }
     }
 
     public function runQuery($sql) {
-        $stmt = $this->conn->prepare($sql);
-        return $stmt;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            return $stmt;
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            echo " DB CONNECTION ERROR ";
+            return false;
+        }
     }
 
     public function register($uname, $upass, $code = 0) {
@@ -143,7 +156,7 @@ class USER {
         $mail->addAddress($email_address, ' ');
 //Set the subject line
         $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = 'Retrieve password qr.wadisa.com ';
+        $mail->Subject = 'Mail from qr.wadisa.com ';
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //convert HTML into a basic plain-text alternative body
         //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
@@ -161,8 +174,7 @@ class USER {
             return true;
         }
     }
-    
-    
+
     public function sendmailer_withAtt($email_address, $file) {
 //Create a new PHPMailer instance
         $mail = new PHPMailer;
@@ -337,11 +349,11 @@ class USER {
     }
 
     //ACTUALIZA LA INFORMACION DE LOS CLIENTES
-    public function updateclient($id, $user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    public function updateclient($id, $user_id, $name, $lastname, $mail, $languaje, $address, $town, $country, $cp, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood, $urlphoto, $logo) {
         try {
             $stmt = $this->conn->prepare("REPLACE INTO clients "
-                    . "(id,name,user_id,lastname,mail,languaje,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES "
-                    . "(:id,:name,:user_id,:lastname,:mail,:languaje,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+                    . "(id,name,user_id,lastname,mail,languaje,address,town, country, cp, phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood,urlphoto,logo) VALUES "
+                    . "(:id,:name,:user_id,:lastname,:mail,:languaje,:address,:town, :country, :cp, :phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood,:urlphoto,:logo)");
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
@@ -349,6 +361,9 @@ class USER {
             $stmt->bindParam(':mail', $mail);
             $stmt->bindParam(':languaje', $languaje);
             $stmt->bindParam(':address', $address);
+            $stmt->bindParam(':town', $town);
+            $stmt->bindParam(':country', $country);
+            $stmt->bindParam(':cp', $cp);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':phonee1', $phonee1);
             $stmt->bindParam(':phonee2', $phonee2);
@@ -363,11 +378,21 @@ class USER {
             $stmt->bindParam(':detail', $detail);
             $stmt->bindParam(':medicine', $medicine);
             $stmt->bindParam(':blood', $blood);
+            $stmt->bindParam(':urlphoto', $urlphoto);
+            $stmt->bindParam(':logo', $logo);
             $stmt->execute();
             //echo "DONE";
-            if (isset($mail) AND isset($qr)){
-            self::sendmailer_withAtt($mail, $qr);
-            }
+//            if (isset($mail) AND $mail != '') {
+//                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+//                    $error[] = 'Please enter a valid email address !';
+//                    echo "PLEASE ENTER A VALID EMAIL !";
+//                    return false;
+//                }
+//                if (isset($qr)) {
+//                    $codigoQR = '/home/'.$qr;
+//                    self::sendmailer_withAtt($mail, $codigoQR);
+//                }
+//            }
             return true;
         } catch (PDOException $e) {
             //echo $e->getMessage();
@@ -377,9 +402,9 @@ class USER {
     }
 
     //AGREGA UN NUEVO CLIENTE
-    public function addclient($user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
+    public function addclient($user_id, $name, $lastname, $mail, $languaje, $address, $town, $country, $cp, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood) {
         try {
-            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,mail,languaje,address,phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:mail,:languaje,:address,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
+            $stmt = $this->conn->prepare("INSERT INTO clients (name,user_id,lastname,mail,languaje,address,town, country, cp, phone,phonee1,phonee2,qr,qrlink,joining_date,end_date,alergy,drname,drphone,detail,medicine,blood) VALUES (:name,:user_id,:lastname,:mail,:languaje,:address,:town,:country, :cp,:phone,:phonee1,:phonee2,:qr,:qrlink,:joining_date,:end_date,:alergy,:drname,:drphone,:detail,:medicine,:blood)");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':lastname', $lastname);
@@ -400,11 +425,23 @@ class USER {
             $stmt->bindParam(':detail', $detail);
             $stmt->bindParam(':medicine', $medicine);
             $stmt->bindParam(':blood', $blood);
+            $stmt->bindParam(':town', $town);
+            $stmt->bindParam(':country', $country);
+            $stmt->bindParam(':cp', $cp);
             $stmt->execute();
             //echo "DONE";
-            if (isset($mail) AND isset($qr)){
-            self::sendmailer_withAtt($mail, $qr);
-            }
+//            if (isset($mail) AND $mail != '') {
+//                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+//                    $error[] = 'Please enter a valid email address !';
+//                    echo "PLEASE ENTER A VALID EMAIL !";
+//                    return false;
+//                }
+//                if (isset($qr)) {
+//                    $codigoQR = '/home/'.$qr;
+//                    self::sendmailer_withAtt($mail, $codigoQR);
+//                }
+//            }
+
             return true;
         } catch (PDOException $e) {
             //echo $e->getMessage();
@@ -458,8 +495,10 @@ class QrGenerator {
         $email = $results[0]['mail'];
         $url = $results[0]['url'];
         $urlphoto = $results[0]['urlphoto'];
+        //$urlphoto = 'http://127.0.0.1:8000/home/tmp/image_UID:333333_CID:71.png';
         $gps = $results[0]['gps'];
         $logo = $results[0]['logo'];
+        //$logo = 'http://127.0.0.1:8000/home/saved_images/photo_UID:333333_CID:71.jpg';
         $languaje = $results[0]['languaje'];
 // medical data data 
         $blood = $results[0]['blood'];
@@ -487,11 +526,11 @@ class QrGenerator {
         $codeContents .= 'CLASS:PUBLIC' . "\n";
         $codeContents .= 'N:' . $name . ";" . $lastname . ";;;\n";
         $codeContents .= 'FN:' . $lastname . " " . $name . "\n";
-        $codeContents .= 'PHOTO;MEDIATYPE=image/jpeg:' . $urlphoto . "\n"; //PHOTO;MEDIATYPE=image/jpeg 
+        $codeContents .= 'PHOTO;MEDIATYPE=image/png:' . $urlphoto . "\n"; //PHOTO;MEDIATYPE=image/jpeg 
         $codeContents .= 'GEO:' . $gps . "\n"; //GEO:geo:39.95,-75.1667
         $codeContents .= 'KIND:individual\n';
-        $codeContents .= 'LANG:' . $logo . "\n"; //LOGO;PNG:http://example.com/logo.png
-        $codeContents .= 'logo:' . $languaje . "\n";
+        $codeContents .= 'LANG:' . $languaje . "\n";
+        $codeContents .= 'LOGO;JPG:' . $logo . "\n"; //LOGO;PNG:http://example.com/logo.png
         $codeContents .= 'TITLE:' . $orgName . "\n";
         $codeContents .= 'URL:' . $url . "\n";
         $codeContents .= 'TEL;HOME;VOICE:' . $phone . "\n";
@@ -512,24 +551,27 @@ class QrGenerator {
         $codeContents .= 'END:VCARD';
         $codeContentsLink = $actual_link;
 // we need to generate filename somehow,  
-// with md5 or with database ID used to obtains $codeContents... 
-        $fileName = '_UID:' . $user_id . '_CID:' . $uid . '_' . md5($codeContents) . '.png';
-        $fileNamelink = '_UID:' . $user_id . '_CID:' . $uid . '_' . md5($codeContents) . 'link.png';
-        $temp = '_UID:' . $user_id . '_CID:' . $uid . '_';
-        $mask = $tempDir . $temp . '*';
+// with md5 or with database ID used to obtains $codeContents... '_' . md5($codeContents) .
+        $fileName = '_UID:' . $user_id . '_CID:' . $uid . '.png';
+        $fileNamelink = '_UID:' . $user_id . '_CID:' . $uid . 'link.png';
+//        $temp = '_UID:' . $user_id . '_CID:' . $uid;
+//        $mask = $tempDir . $temp . '*';
         $pngAbsoluteFilePath = $tempDir . $fileName;
         $pngAbsoluteFilePathlink = $tempDir . $fileNamelink;
 // generating 
-        if (!file_exists($pngAbsoluteFilePath)) {
-            array_map( "unlink", glob( $mask ) );
-            QRcode::png($codeContents, $pngAbsoluteFilePath, "L", 4, 4);
+        if (file_exists($pngAbsoluteFilePath)) {
+            array_map("unlink", glob($pngAbsoluteFilePath));
         }
-        if (!file_exists($pngAbsoluteFilePathlink)) {
-            //array_map( "unlink", glob( $mask ) );
-            QRcode::png($codeContentsLink, $pngAbsoluteFilePathlink, "L", 4, 4);
+        QRcode::png($codeContents, $pngAbsoluteFilePath, "L", 4, 4);
+        if (file_exists($pngAbsoluteFilePathlink)) {
+            array_map("unlink", glob($pngAbsoluteFilePathlink));
         }
+        QRcode::png($codeContentsLink, $pngAbsoluteFilePathlink, "L", 4, 4);
+
+
         return array($pngAbsoluteFilePath, $pngAbsoluteFilePathlink);
     }
+
 }
 
 /// START POST METHODS
@@ -662,6 +704,9 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $mail = strip_tags(filter_input(INPUT_POST, 'mail'));
     $languaje = strip_tags(filter_input(INPUT_POST, 'languaje'));
     $address = strip_tags(filter_input(INPUT_POST, 'address'));
+    $town = strip_tags(filter_input(INPUT_POST, 'town'));
+    $country = strip_tags(filter_input(INPUT_POST, 'country'));
+    $cp = strip_tags(filter_input(INPUT_POST, 'cp'));
     $phone = strip_tags(filter_input(INPUT_POST, 'phone'));
     $phonee1 = strip_tags(filter_input(INPUT_POST, 'phonee1'));
     $phonee2 = strip_tags(filter_input(INPUT_POST, 'phonee2'));
@@ -675,8 +720,10 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'updateclient') {
     $detail = strip_tags(filter_input(INPUT_POST, 'detail'));
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
+    $urlphoto = strip_tags(filter_input(INPUT_POST, 'urlphoto'));
+    $logo = strip_tags(filter_input(INPUT_POST, 'logo'));
 
-    if ($login->updateclient($id, $user_id, $name, $lastname,$mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+    if ($login->updateclient($id, $user_id, $name, $lastname, $mail, $languaje, $address, $town, $country, $cp, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood, $urlphoto, $logo)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;
@@ -706,9 +753,13 @@ if (isset($_POST['btnlogin']) and $_POST['btnlogin'] == 'addclient') {
     $drphone = strip_tags(filter_input(INPUT_POST, 'drphone'));
     $detail = strip_tags(filter_input(INPUT_POST, 'detail'));
     $medicine = strip_tags(filter_input(INPUT_POST, 'medicine'));
+    $town = strip_tags(filter_input(INPUT_POST, 'town'));
+    $country = strip_tags(filter_input(INPUT_POST, 'country'));
+    $cp = strip_tags(filter_input(INPUT_POST, 'cp'));
     $blood = strip_tags(filter_input(INPUT_POST, 'blood'));
 
-    if ($login->addclient($user_id, $name, $lastname, $mail, $languaje, $address, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
+
+    if ($login->addclient($user_id, $name, $lastname, $mail, $languaje, $address, $town, $country, $cp, $phone, $phonee1, $phonee2, $qr, $qrlink, $joining_date, $end_date, $alergy, $drname, $drphone, $detail, $medicine, $blood)) {
         //$login->redirect('../home/index.php');
         echo "DONE";
         return true;

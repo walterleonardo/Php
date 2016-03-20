@@ -19,7 +19,8 @@ if (isset($_POST['userid'])) {
     $action = "updateclient";
 
     $actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
-
+//    $photo = 'http://' . $_SERVER[HTTP_HOST] . '/home/saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
+//    $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_CID:' . $uid . '.png';
 //CREAMON UNA INSTANCIA DE QR
     $qr = new QrGenerator();
     $imageName = $qr->qrGen($results, $actual_link);
@@ -33,6 +34,8 @@ if (isset($_POST['userid'])) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //CREAMON UNA INSTANCIA DE QR
     $actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
+//    $photo = 'http://' . $_SERVER[HTTP_HOST] . '/home/saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
+//    $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_CID:' . $uid . '.png';
     $qr = new QrGenerator();
     $imageName = $qr->qrGen($results, $actual_link);
     $button = "UPDATE";
@@ -53,7 +56,10 @@ if (!$results_user[0]['admin']) {
     $auth_user->redirect('../home/index.php');
 }
 
-$file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
+$file = 'saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
+$photo = 'http://' . $_SERVER[HTTP_HOST] . '/home/saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
+$logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_CID:' . $uid . '.png';
+   
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -145,12 +151,12 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <h2 class="section-heading">INFORMATION</h2>
-                        <h3 class="section-subheading text-muted">.</h3>
-                        <h3><?php echo "COMPANY ID " . $user_id . ""; ?></h3>
-                        <h3><?php echo "CLIENT ID " . $uid . ""; ?></h3>
-                        <a href="<?php echo $actual_link; ?>"><?php echo $actual_link; ?></a>
+                        <h3 class="section-subheading text-muted"><?php echo "COMPANY ID " . $user_id . ""; ?><?php echo "   CLIENT ID " . $uid . ""; ?></h3>
+                        <a href="<?php echo $actual_link; ?>" class="btn btn-info" target="_blank">LINK TO INFO</a>
                         <br>
+                        <hr>
                         <br>
+
                     </div>
                 </div>
                 <div class="row">
@@ -168,14 +174,18 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                                 echo $file;
                                             }
                                             ?>" alt=""></a>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> ID</i></span>
+                                        <input type="text" class="form-control" value="<?php echo $results[0]['id']; ?>" id="id" required disabled>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['name'])) {
-                                                   ?>placeholder="Name *"<?php
+                                        if (empty($results[0]['name'])) {
+                                            ?>placeholder="Name *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['name']; ?>"<?php
                                                }
@@ -188,8 +198,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> LASTNAME</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['lastname'])) {
-                                                   ?>placeholder="LastName *"<?php
+                                        if (empty($results[0]['lastname'])) {
+                                            ?>placeholder="LastName *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['lastname']; ?>"<?php
                                                }
@@ -201,8 +211,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> MAIL</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['mail'])) {
-                                                   ?>placeholder="Mail *"<?php
+                                        if (empty($results[0]['mail'])) {
+                                            ?>placeholder="Mail *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['mail']; ?>"<?php
                                                }
@@ -214,8 +224,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> ADDRESS</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['address'])) {
-                                                   ?>placeholder="Address *"<?php
+                                        if (empty($results[0]['address'])) {
+                                            ?>placeholder="Address *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['address']; ?>"<?php
                                                }
@@ -227,8 +237,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> TOWN</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['town'])) {
-                                                   ?>placeholder="Town *"<?php
+                                        if (empty($results[0]['town'])) {
+                                            ?>placeholder="Town *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['town']; ?>"<?php
                                                }
@@ -240,8 +250,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> COUNTRY</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['country'])) {
-                                                   ?>placeholder="Country *"<?php
+                                        if (empty($results[0]['country'])) {
+                                            ?>placeholder="Country *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['country']; ?>"<?php
                                                }
@@ -253,8 +263,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-home"> POSTAL CODE</i></span>
                                         <input type="text" class="form-control" 
                                         <?php
-                                               if (empty($results[0]['cp'])) {
-                                                   ?>placeholder="Postal Code *"<?php
+                                        if (empty($results[0]['cp'])) {
+                                            ?>placeholder="Postal Code *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['cp']; ?>"<?php
                                                }
@@ -266,8 +276,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> CONTACT</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                               if (empty($results[0]['phone'])) {
-                                                   ?>placeholder="Contact phone +34 555 555 555 *"<?php
+                                        if (empty($results[0]['phone'])) {
+                                            ?>placeholder="Contact phone +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phone']; ?>"<?php
                                                }
@@ -280,8 +290,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 1</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                               if (empty($results[0]['phonee1'])) {
-                                                   ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
+                                        if (empty($results[0]['phonee1'])) {
+                                            ?>placeholder="Emergency phone 1  +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phonee1']; ?>"<?php
                                                }
@@ -294,8 +304,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"> EMERGENCY 2</i></span>
                                         <input type="tel" class="form-control"
                                         <?php
-                                               if (empty($results[0]['phonee2'])) {
-                                                   ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
+                                        if (empty($results[0]['phonee2'])) {
+                                            ?>placeholder="Emergency phone 2 +34 555 555 555 *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['phonee2']; ?>"<?php
                                                }
@@ -305,27 +315,28 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                     </div>
 
                                 </div>
-                                <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $results[0]['user_id'] ?>"> 
-                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name'] ?>"> 
-                                <input type="hidden" name="qr" class="form-control" id="qr" value="<?php echo $imageName[0] ?>"> 
-                                <input type="hidden" name="qrlink" class="form-control" id="qrlink" value="<?php echo $actual_link ?>"> 
+                                <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $results[0]['user_id']; ?>"> 
+                                <input type="hidden" name="user" class="form-control" id="user" value="<?php echo $results[0]['name']; ?>"> 
+                                <input type="hidden" name="qr" class="form-control" id="qr" value="<?php echo $imageName[0]; ?>"> 
+                                <input type="hidden" name="qrlink" class="form-control" id="qrlink" value="<?php echo $actual_link; ?>"> 
                                 <input type="hidden" name="type" class="form-control" id="type" value="updateclient">  
+                                <input type="hidden" name="urlphoto" class="form-control" id="urlphoto" value="<?php echo $photo; ?>"> 
+                                <input type="hidden" name="logo" class="form-control" id="logo" value="<?php echo $logo; ?>">  
                                 <div class="col-md-6">
 
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
-<?php echo '<img src="' . $imageName[0] . '" />'; ?>
-                                        <p class="help-block text-danger"></p>
+                                        <img src="<?php echo $imageName[0]; ?>" />
                                     </div> 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> LANGUAJE</i></span>
                                         <input class="form-control"
                                         <?php
-                                               if (empty($results[0]['languaje'])) {
-                                                   ?>placeholder="Languaje *"<?php
+                                        if (empty($results[0]['languaje'])) {
+                                            ?>placeholder="Languaje *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['languaje'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['languaje']; ?>"<?php
                                                }
                                                ?> id="languaje" >
                                         <p class="help-block text-danger"></p>
@@ -335,10 +346,10 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR NAME</i></span>
                                         <input class="form-control"
                                         <?php
-                                               if (empty($results[0]['drname'])) {
-                                                   ?>placeholder="Doctor Name *"<?php
+                                        if (empty($results[0]['drname'])) {
+                                            ?>placeholder="Doctor Name *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['drname'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['drname']; ?>"<?php
                                                }
                                                ?> id="drname" >
                                         <p class="help-block text-danger"></p>
@@ -348,10 +359,10 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DR PHONE</i></span>
                                         <input class="form-control" 
                                         <?php
-                                               if (empty($results[0]['drphone'])) {
-                                                   ?>placeholder="Doctor Phone *"<?php
+                                        if (empty($results[0]['drphone'])) {
+                                            ?>placeholder="Doctor Phone *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['drphone'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['drphone']; ?>"<?php
                                                }
                                                ?>  id="drphone" >
                                         <p class="help-block text-danger"></p>
@@ -361,10 +372,10 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> DETAIL</i></span>
                                         <input class="form-control" 
                                         <?php
-                                               if (empty($results[0]['detail'])) {
-                                                   ?>placeholder="Detail info *"<?php
+                                        if (empty($results[0]['detail'])) {
+                                            ?>placeholder="Detail info *"<?php
                                                } else {
-                                                   ?>value="<?php echo "" . $results[0]['detail'] . ""; ?>"<?php
+                                                   ?>value="<?php echo $results[0]['detail']; ?>"<?php
                                                }
                                                ?> id="detail" >
                                         <p class="help-block text-danger"></p>
@@ -373,8 +384,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> ALERGIES</i></span>
                                         <input class="form-control" 
                                         <?php
-                                               if (empty($results[0]['alergy'])) {
-                                                   ?>placeholder="Include Alergies *"<?php
+                                        if (empty($results[0]['alergy'])) {
+                                            ?>placeholder="Include Alergies *"<?php
                                                } else {
                                                    ?>value="<?php echo $results[0]['alergy']; ?>"<?php
                                                }
@@ -385,8 +396,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> MEDICINE</i></span>
                                         <input class="form-control" 
                                         <?php
-                                               if (empty($results[0]['medicine'])) {
-                                                   ?>placeholder="Medicine info *"<?php
+                                        if (empty($results[0]['medicine'])) {
+                                            ?>placeholder="Medicine info *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['medicine'] . ""; ?>"<?php
                                                }
@@ -398,8 +409,8 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
                                         <input class="form-control" 
                                         <?php
-                                               if (empty($results[0]['blood'])) {
-                                                   ?>placeholder="Blood info *"<?php
+                                        if (empty($results[0]['blood'])) {
+                                            ?>placeholder="Blood info *"<?php
                                                } else {
                                                    ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
                                                }
@@ -411,12 +422,11 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                                 <div class="col-lg-12 text-center">
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> LINK</i></span>
-<?php echo '<img src="' . $imageName[1] . '" />'; ?>
-                                        <p class="help-block text-danger"></p>
+                                        <img src="<?php echo $imageName[1]; ?>" />
                                     </div>
                                     <div id="success"></div>
-                                    <button type="submit" class="btn btn-xl"><?php echo $button; ?></button>
-                                    <a href="dashboard.php" class="btn btn-xl">BACK</a>
+                                    <button type="submit" class="btn btn-info"><?php echo $button; ?></button>
+                                    <a href="dashboard.php" class="btn btn-danger">BACK</a>
                                 </div>
                             </div>
                         </form>
@@ -461,19 +471,16 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
             <!--<a href="#" onclick="lightbox_close();"><img src="../imagenes/picture.png" alt="" /></a>-->
             <div id="camera_wrapper">
                 <div id="camera"></div>
-                <button id="capture_btn">CAPTURE</button><button id="close" onclick="lightbox_close();">CLOSE</button>
+                <button id="capture_btn" class="btn btn-info">CAPTURE</button><button id="close" onclick="lightbox_close();" class="btn btn-danger">CLOSE</button>
+                <div id="show_saved_img" ></div>
             </div>
             <!--show captured image--> 
-            <!--<div id="show_saved_img" ></div>-->
+
 
         </div>
         <div id="fade" onClick="lightbox_close();"></div>
 
 
-        <div id="light">
-            <a href="#" onclick="lightbox_close();"><img src="<?php echo $imageName[0]; ?>" alt="" /></a>
-        </div>
-        <div id="fade" onClick="lightbox_close();"></div>
         <!-- /container -->
         <!-- jQuery Version 1.11.0 -->
         <script src="../js/jquery-1.11.0.js"></script>
@@ -494,25 +501,7 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
         <!-- Custom Theme JavaScript -->
         <script src="../js/agency.js"></script>
 
-        <!-- Piwik -->
-        <script type="text/javascript">
-            var _paq = _paq || [];
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
-            (function () {
-                var u = (("https:" == document.location.protocol) ? "https" : "http") + "://piwik.walii.es/";
-                _paq.push(['setTrackerUrl', u + 'piwik.php']);
-                _paq.push(['setSiteId', 1]);
-                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-                g.type = 'text/javascript';
-                g.defer = true;
-                g.async = true;
-                g.src = u + 'piwik.js';
-                s.parentNode.insertBefore(g, s);
-            })();
-        </script>
-        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
-        <!-- End Piwik Code --> 
+
         <!-- SCRIPT FOR POPUP IMAGE -->
         <script type="text/javascript">
             window.document.onkeydown = function (e)
@@ -532,6 +521,7 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
             function lightbox_close() {
                 document.getElementById('light').style.display = 'none';
                 document.getElementById('fade').style.display = 'none';
+                window.location.reload(true);
             }
         </script>
         <script type="text/javascript" src="scripts/webcam.js"></script>
@@ -549,16 +539,16 @@ $file='saved_images/photo_UID:'.$user_id.'_CID:'.$uid.'.jpg';
                 $('#capture_btn').click(function () {
                     //take snap
                     webcam.snap();
-                    $('#show_saved_img').html('<h3>Please Wait...</h3>');
+                    $('#show_saved_img').html('<h3>CAPTURED...</h3>');
                 });
 
 
                 //after taking snap call show image
-                webcam.set_hook('onComplete', function (img) {
-                    $('#show_saved_img').html('<img src="' + img + '">');
-                    //reset camera for the next shot
-                    webcam.reset();
-                });
+//                webcam.set_hook('onComplete', function (img) {
+//                    $('#show_saved_img').html('<img src="' + img + '">');
+//                    //reset camera for the next shot
+//                    webcam.reset();
+//                });
 
             });
         </script>

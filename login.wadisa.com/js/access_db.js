@@ -1,6 +1,6 @@
 $(function () {
 
-    $("input").jqBootstrapValidation({
+    $("input,select").jqBootstrapValidation({
         preventSubmit: true,
         submitError: function ($form, event, errors) {
             // additional error messages or events
@@ -33,6 +33,11 @@ $(function () {
             var qr = $("input#qr").val();
             var qrlink = $("input#qrlink").val();
             var code = $("input#code").val();
+            var town = $("input#town").val();
+            var country = $("input#country").val();
+            var cp = $("input#cp").val();
+            var urlphoto = $("input#urlphoto").val();
+            var logo = $("input#logo").val();
             var firstName = user; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
             if (firstName.indexOf(' ') >= 0) {
@@ -57,6 +62,8 @@ $(function () {
                     qr: qr,
                     qrlink: qrlink,
                     id: id,
+                    urlphoto: urlphoto,
+                    logo: logo,
                     userid: userid,
                     code: code,
                     btnlogin: btnlogin,
@@ -66,25 +73,38 @@ $(function () {
                     rpassb: rpassb,
                     pass: pass,
                     address: address,
+                    country: country,
+                    town: town,
+                    cp: cp,
                     phone: phone
                 },
                 cache: false,
                 success: function (data) {
                     if (data === "DONE") {
                         // window.location.replace("http://www.buhonet.es/en/home/index.php");
-                        window.location.reload(true);
+                        //window.location.reload(true);
                         // Success message
                         $('#success').html("<div class='alert alert-success'>");
                         $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                                 .append("</button>");
                         $('#success > .alert-success')
-                                .append("<strong>Account connected success. </strong> ");
+                                .append("<strong>Success. </strong> ");
 
                         $('#success > .alert-success')
                                 .append('</div>');
-
                         //clear all fields
                         $('#contactForm').trigger("reset");
+                        setInterval(function(){window.location.reload(true);},1000);
+                    } else if (data === "UPDATED"){
+                    // Fail message
+                        $('#success').html("<div class='alert alert-success'>");
+                        $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
+                                .append("</button>");
+                        $('#success > .alert-success').append("<strong>" + data + "<strong>" );
+                        $('#success > .alert-success').append('</div>');
+                        //clear all fields
+                        $('#contactForm').trigger("reset");
+
                     } else {
                         // Fail message
                         $('#success').html("<div class='alert alert-danger'>");

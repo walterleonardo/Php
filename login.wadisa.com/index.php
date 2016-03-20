@@ -1,6 +1,6 @@
 <?php
 //require_once("config/class.user.php");
-
+$empresa='QR';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -147,7 +147,7 @@
         <!-- Custom Theme JavaScript -->
         <script src="js/agency.js"></script>
 
-        <!-- Piwik -->
+        <!-- Piwik 
         <script type="text/javascript">
             var _paq = _paq || [];
             _paq.push(['trackPageView']);
@@ -164,7 +164,7 @@
                 s.parentNode.insertBefore(g, s);
             })();
         </script>
-        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+        <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>-->
         <!-- End Piwik Code -->    
     </body>
 </html>

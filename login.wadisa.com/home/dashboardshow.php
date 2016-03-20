@@ -14,6 +14,8 @@ if (isset($_GET['btn-update'])) {
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    $file = 'saved_images/photo_UID:' . $uid . '_CID:' . $cid . '.jpg';
     ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -47,8 +49,6 @@ if (isset($_GET['btn-update'])) {
             <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
             <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
             <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-            <!-- Custom CSS charts-->
-            <link href="../css/graph1.css" rel="stylesheet">
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
@@ -91,6 +91,11 @@ if (isset($_GET['btn-update'])) {
                         <div class="col-lg-12 text-center">
                             <h2 class="section-heading">DASHBOARD SHOW</h2>
                             <h3 class="section-subheading text-muted">Information.</h3>
+                            <h3 class="section-subheading text-muted"><?php echo "COMPANY ID " . $uid . ""; ?><?php echo "   CLIENT ID " . $cid . ""; ?></h3>
+                            <a href="<?php echo $actual_link; ?>" class="btn btn-info" target="_blank">LINK TO INFO</a>
+                            <br>
+                            <hr>
+                            <br>
                         </div>
                     </div>
                     <div class="row">
@@ -98,11 +103,16 @@ if (isset($_GET['btn-update'])) {
                             <form name="sentMessage" id="contactForm" novalidate>
                                 <div class="row">
                                     <div class="col-md-6">
-                                   <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> PHOTO</i></span>
-                                        <img src="../imagenes/picture.png" alt="">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
+                                        <div style="margin-bottom: 25px" class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"> PHOTO</i></span>
+                                            <img src="<?php
+                                            if (!file_exists($file)) {
+                                                echo '../imagenes/picture.png';
+                                            } else {
+                                                echo $file;
+                                            }
+                                            ?>" alt="">
+                                        </div>
                                         <div style="margin-bottom: 25px" class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
                                             <input type="text" class="form-control" value="<?php echo $results[0]['name']; ?>" id="name" disabled>
@@ -163,8 +173,7 @@ if (isset($_GET['btn-update'])) {
                                     <div class="col-md-6">
                                         <div style="margin-bottom: 25px" class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
-                                            <a href="#" onclick="lightbox_open();"><img src="<?php echo $results[0]['qr'] ?>" alt=""></a>
-                                            <p class="help-block text-danger"></p>
+                                            <a href="#" onclick="lightbox_open();"><img src="tmp/image_UID:<?php echo $uid;?>_CID:<?php echo $cid;?>.png" alt="qr"></a>
                                         </div>
                                         <div style="margin-bottom: 25px" class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
@@ -260,9 +269,9 @@ if (isset($_GET['btn-update'])) {
                 </div>
             </footer>
             <div id="light">
-            <a href="#" onclick="lightbox_close();"><img src="<?php echo $results[0]['qr'] ?>" alt="" /></a>
-        </div>
-        <div id="fade" onClick="lightbox_close();"></div>
+                <a href="#" onclick="lightbox_close();"><img src="tmp/image_UID:<?php echo $uid;?>_CID:<?php echo $cid;?>.png" alt="QR" /></a>
+            </div>
+            <div id="fade" onClick="lightbox_close();"></div>
             <!-- /container -->
             <!-- jQuery Version 1.11.0 -->
             <script src="../js/jquery-1.11.0.js"></script>
@@ -283,44 +292,28 @@ if (isset($_GET['btn-update'])) {
             <!-- Custom Theme JavaScript -->
             <script src="../js/agency.js"></script>
 
-            <!-- Piwik -->
+          
+            <!-- SCRIPT FOR POPUP IMAGE -->
             <script type="text/javascript">
-                var _paq = _paq || [];
-                _paq.push(['trackPageView']);
-                _paq.push(['enableLinkTracking']);
-                (function () {
-                    var u = (("https:" == document.location.protocol) ? "https" : "http") + "://piwik.walii.es/";
-                    _paq.push(['setTrackerUrl', u + 'piwik.php']);
-                    _paq.push(['setSiteId', 1]);
-                    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-                    g.type = 'text/javascript';
-                    g.defer = true;
-                    g.async = true;
-                    g.src = u + 'piwik.js';
-                    s.parentNode.insertBefore(g, s);
-                })();
+                window.document.onkeydown = function (e)
+                {
+                    if (!e) {
+                        e = event;
+                    }
+                    if (e.keyCode == 27) {
+                        lightbox_close();
+                    }
+                }
+                function lightbox_open() {
+                    window.scrollTo(0, 0);
+                    document.getElementById('light').style.display = 'block';
+                    document.getElementById('fade').style.display = 'block';
+                }
+                function lightbox_close() {
+                    document.getElementById('light').style.display = 'none';
+                    document.getElementById('fade').style.display = 'none';
+                }
             </script>
-             <!-- SCRIPT FOR POPUP IMAGE -->
-        <script type="text/javascript">
-            window.document.onkeydown = function (e)
-            {
-                if (!e) {
-                    e = event;
-                }
-                if (e.keyCode == 27) {
-                    lightbox_close();
-                }
-            }
-            function lightbox_open() {
-                window.scrollTo(0, 0);
-                document.getElementById('light').style.display = 'block';
-                document.getElementById('fade').style.display = 'block';
-            }
-            function lightbox_close() {
-                document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none';
-            }
-        </script>
             <noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
             <!-- End Piwik Code -->    
         </body>

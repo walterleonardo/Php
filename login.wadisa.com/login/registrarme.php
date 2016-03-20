@@ -197,10 +197,10 @@ if($user->is_loggedin())
     <!-- <script src="../js/registro_me.js"></script>-->
     <script src="../js/access_db.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="../js/agency.js"></script>
+    <!-- Custom Theme JavaScript 
+    <script src="../js/agency.js"></script>-->
 
-<!-- Piwik -->
+<!-- Piwik 
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(['trackPageView']);
@@ -213,6 +213,6 @@ if($user->is_loggedin())
     g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="http://piwik.walii.es/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>-->
 <!-- End Piwik Code -->    </body>
 </html>
