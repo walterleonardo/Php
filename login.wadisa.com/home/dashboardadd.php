@@ -46,9 +46,9 @@ $action = "updateclient";
         <!-- Custom Fonts -->
         <link href="../css/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="../css/css.css" rel="stylesheet" type="text/css">
-        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<!--        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
         <!-- Custom CSS charts-->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -212,15 +212,27 @@ $action = "updateclient";
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
-                                        <input type="text" class="form-control"  id="blood" >
+                                        <!--<input type="text" class="form-control"  id="blood" >-->
+                                        <select type="text" class="form-control"  id="blood" >
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                            <option value="" selected></option>
+                                        </select>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
+                                <hr>
                                 <div class="col-lg-12 text-center">
                                     <div id="success"></div>
-                                    <button type="submit" class="btn btn-info">ADD</button>
-                                    <a href="dashboard.php" class="btn btn-danger">BACK</a>
+                                    <button type="submit" class="btn btn-info btn-lg" onclick="window.location.href='dashboard.php'">ADD</button>
+                                    <a href="dashboard.php" class="btn btn-danger btn-lg">BACK</a>
                                 </div>
                             </div>
                         </form>

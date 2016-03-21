@@ -46,9 +46,9 @@ if (isset($_GET['btn-update'])) {
             <!-- Custom Fonts -->
             <link href="../css/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
             <link href="../css/css.css" rel="stylesheet" type="text/css">
-            <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<!--            <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
             <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-            <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+            <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
@@ -92,7 +92,7 @@ if (isset($_GET['btn-update'])) {
                             <h2 class="section-heading">DASHBOARD SHOW</h2>
                             <h3 class="section-subheading text-muted">Information.</h3>
                             <h3 class="section-subheading text-muted"><?php echo "COMPANY ID " . $uid . ""; ?><?php echo "   CLIENT ID " . $cid . ""; ?></h3>
-                            <a href="<?php echo $actual_link; ?>" class="btn btn-info" target="_blank">LINK TO INFO</a>
+                            <!--<a href="<?php echo $actual_link; ?>" class="btn btn-info" target="_blank">LINK TO INFO</a>-->
                             <br>
                             <hr>
                             <br>
@@ -111,7 +111,7 @@ if (isset($_GET['btn-update'])) {
                                             } else {
                                                 echo $file;
                                             }
-                                            ?>" alt="">
+                                            ?>" alt="" class="img-rounded">
                                         </div>
                                         <div style="margin-bottom: 25px" class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"> NAME</i></span>
@@ -230,6 +230,7 @@ if (isset($_GET['btn-update'])) {
 
                                     </div>
                                     <div class="clearfix"></div>
+                                    <hr>
                                     <div class="col-lg-12 text-center">
                                         <div id="success"></div>
                                     </div>

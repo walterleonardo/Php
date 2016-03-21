@@ -25,7 +25,8 @@ $(function () {
             var phonee1 = $("input#phonee1").val();
             var phonee2 = $("input#phonee2").val();
             var medicine = $("input#medicine").val();
-            var blood = $("input#blood").val();
+            var sendqr = $("select#sendqr").val();
+            var blood = $("select#blood").val();
             var detail = $("input#detail").val();
             var alergy = $("input#alergy").val();
             var name = $("input#name").val();
@@ -51,6 +52,7 @@ $(function () {
                     phonee2: phonee2,
                     medicine: medicine,
                     blood: blood,
+                    sendqr: sendqr,
                     mail: mail,
                     languaje: languaje,
                     detail: detail,

@@ -68,9 +68,9 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Custom Fonts -->
         <link href="../css/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="../css/css.css" rel="stylesheet" type="text/css">
-        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<!--        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
         <!-- Custom CSS charts-->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -178,7 +178,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="input-group">
                                         <input type="search" name="s" class="form-control" placeholder="Search for..." value="<?php echo $search_term; ?>">
                                         <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-secondary" type="button">SEARCH</button>
+                                            <button type="submit" class="btn btn-secondary">SEARCH</button>
                                         </span>
 
                                     </div>
@@ -203,9 +203,9 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
                                     <input class="form-control" name="user" value="<?php echo $row['name'] . " " . $row['lastname']; ?>" id="user" disabled>
                                     <span class="input-group-addon">
-                                        <input type="submit" id="btn-add" name="btn-add" value="CONFIG"></span>
+                                        <input type="submit" id="btn-add" class="btn btn-primary btn-xs" name="btn-add" value="CONFIG"></span>
                                         <span class="input-group-addon">
-                                            <input type="button" id="btn-add" name="btn-add" value="DELETE" onclick="return confirm('ARE YOU SURE THAT WANT TO DELETE THE CLIENT  <?php echo $row['name'] ?> <?php echo $row['lastname'] ?>?')? window.open('?deleteItem=<?php echo $row['id'] ?>','_self'): void(0);">
+                                            <input type="button" class="btn btn-danger btn-xs" id="btn-add" name="btn-add" value="DELETE" onclick="return confirm('ARE YOU SURE THAT WANT TO DELETE THE CLIENT  <?php echo $row['name'] ?> <?php echo $row['lastname'] ?>?')? window.open('?deleteItem=<?php echo $row['id'] ?>','_self'): void(0);">
                                     </span>
                                     <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $row['id'] ?>"> 
                                 </div>
@@ -228,9 +228,9 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
                                     <input class="form-control" name="user" value="<?php echo $row['name'] . " " . $row['lastname']; ?>" id="user" disabled>
                                     <span class="input-group-addon">
-                                        <input type="submit" id="btn-add" name="btn-add" value="CONFIG"></span>
+                                        <input type="submit" id="btn-add" class="btn btn-primary btn-xs" name="btn-add" value="CONFIG"></span>
                                         <span class="input-group-addon">
-                                            <input type="button" id="btn-add" name="btn-add" value="DELETE" onclick="return confirm('ARE YOU SURE THAT WANT TO DELETE THE CLIENT  <?php echo $row['name'] ?> <?php echo $row['lastname'] ?>?')? window.open('?deleteItem=<?php echo $row['id'] ?>','_self'): void(0);">
+                                            <input type="button" id="btn-add" class="btn btn-danger btn-xs" name="btn-add" value="DELETE" onclick="return confirm('ARE YOU SURE THAT WANT TO DELETE THE CLIENT  <?php echo $row['name'] ?> <?php echo $row['lastname'] ?>?')? window.open('?deleteItem=<?php echo $row['id'] ?>','_self'): void(0);">
                                     </span>
                                     <input type="hidden" name="userid" class="form-control" id="userid" value="<?php echo $row['id'] ?>"> 
                                 </div>

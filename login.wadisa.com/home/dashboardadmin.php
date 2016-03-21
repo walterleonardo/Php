@@ -36,8 +36,8 @@ if (isset($_POST['userid'])) {
     $actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
 //    $photo = 'http://' . $_SERVER[HTTP_HOST] . '/home/saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
 //    $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_CID:' . $uid . '.png';
-    $qr = new QrGenerator();
-    $imageName = $qr->qrGen($results, $actual_link);
+//    $qr = new QrGenerator();
+//    $imageName = $qr->qrGen($results, $actual_link);
     $button = "UPDATE";
     $action = "updateclient";
 }
@@ -59,7 +59,7 @@ if (!$results_user[0]['admin']) {
 $file = 'saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
 $photo = 'http://' . $_SERVER[HTTP_HOST] . '/home/saved_images/photo_UID:' . $user_id . '_CID:' . $uid . '.jpg';
 $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_CID:' . $uid . '.png';
-   
+//$actual_link = 'http://' . $_SERVER[HTTP_HOST] . '/home/dashboardshow.php' . '?btn-update=enable&type=load&userid=' . $user_id . '&clientid=' . $uid;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -87,9 +87,9 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
         <!-- Custom Fonts -->
         <link href="../css/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="../css/css.css" rel="stylesheet" type="text/css">
-        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<!--        <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
         <!-- Custom CSS charts-->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -173,7 +173,7 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
                                             } else {
                                                 echo $file;
                                             }
-                                            ?>" alt=""></a>
+                                            ?>" alt="" class="img-rounded"></a>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"> ID</i></span>
@@ -208,8 +208,10 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"> MAIL</i></span>
-                                        <input type="text" class="form-control" 
+                                        <span class="input-group-addon">
+                                            <i class="glyphicon glyphicon-user"> MAIL</i>
+                                        </span>
+                                        <input type="email" class="form-control" 
                                         <?php
                                         if (empty($results[0]['mail'])) {
                                             ?>placeholder="Mail *"<?php
@@ -218,6 +220,16 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
                                                }
                                                ?>
                                                id="mail">
+                                               <?php if (!empty($results[0]['mail'])) { ?>
+                                            <span class="input-group-btn">
+                                                <label class="input-group-addon"><select type="text" id="sendqr" class="btn btn-danger btn-xs">
+                                                        <option value="0" selected >SEND QR = NO</option>
+                                                        <option value="1" >SEND QR = YES</option>
+
+                                                    </select>
+                                                </label>
+                                            </span>
+                                        <?php } ?>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div style="margin-bottom: 25px" class="input-group">
@@ -324,11 +336,22 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
                                 <input type="hidden" name="logo" class="form-control" id="logo" value="<?php echo $logo; ?>">  
                                 <div class="col-md-6">
 
-
+                                    
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> DETAIL</i></span>
                                         <img src="<?php echo $imageName[0]; ?>" />
                                     </div> 
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                            <input class="form-control" value="JOINING DATE: <?php echo " " . $results[0]['joining_date'] . " "; ?>" id="joining_date_no" disabled>
+                                            <p class="help-block text-danger"></p>
+                                        </div>
+
+                                        <div style="margin-bottom: 25px" class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                            <input class="form-control" value="UPDATE DETAIL: <?php echo " " . $results[0]['end_date'] . " "; ?>" id="end_date_no" disabled>
+                                            <p class="help-block text-danger"></p>
+                                        </div>
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> LANGUAJE</i></span>
                                         <input class="form-control"
@@ -407,26 +430,77 @@ $logo = 'http://' . $_SERVER[HTTP_HOST] . '/home/tmp/image_UID:' . $user_id . '_
 
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-heart"> BLOOD TYPE</i></span>
-                                        <input class="form-control" 
+<!--                                        <input class="form-control" 
                                         <?php
                                         if (empty($results[0]['blood'])) {
                                             ?>placeholder="Blood info *"<?php
-                                               } else {
-                                                   ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
-                                               }
-                                               ?> id="blood" >
+                                        } else {
+                                            ?>value="<?php echo "" . $results[0]['blood'] . ""; ?>"<?php
+                                        }
+                                        ?> id="blood" >-->
+
+                                        <!--<input type="text" class="form-control"  id="blood" >-->
+                                        <select type="text" class="form-control"  id="blood" >
+                                            <option value="A+" <?php
+                                            if ($results[0]['blood'] == 'A+') {
+                                                echo selected;
+                                            }
+                                            ?> >A+</option>
+                                            <option value="A-" <?php
+                                            if ($results[0]['blood'] == 'A-') {
+                                                echo selected;
+                                            }
+                                            ?>>A-</option>
+                                            <option value="B+" <?php
+                                                    if ($results[0]['blood'] == 'B+') {
+                                                        echo selected;
+                                                    }
+                                                    ?>>B+</option>
+                                            <option value="B-" <?php
+                                            if ($results[0]['blood'] == 'B-') {
+                                                echo selected;
+                                            }
+                                            ?>>B-</option>
+                                            <option value="AB+" <?php
+                                            if ($results[0]['blood'] == 'AB+') {
+                                                echo selected;
+                                            }
+                                            ?>>AB+</option>
+                                            <option value="AB-" <?php
+                                                    if ($results[0]['blood'] == 'AB-') {
+                                                        echo selected;
+                                                    }
+                                                    ?>>AB-</option>
+                                            <option value="O+" <?php
+                                                    if ($results[0]['blood'] == 'O+') {
+                                                        echo selected;
+                                                    }
+                                                    ?>>O+</option>
+                                            <option value="O-" <?php
+                                                    if ($results[0]['blood'] == 'O-') {
+                                                        echo selected;
+                                                    }
+                                                    ?>>O-</option>
+                                            <option value="" <?php
+                                                    if ($results[0]['blood'] == '') {
+                                                        echo selected;
+                                                    }
+                                                    ?>></option>
+                                        </select>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
+                                <hr>
                                 <div class="col-lg-12 text-center">
                                     <div style="margin-bottom: 25px" class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-qrcode"> LINK</i></span>
                                         <img src="<?php echo $imageName[1]; ?>" />
                                     </div>
+                                    <hr>
                                     <div id="success"></div>
-                                    <button type="submit" class="btn btn-info"><?php echo $button; ?></button>
-                                    <a href="dashboard.php" class="btn btn-danger">BACK</a>
+                                    <button type="submit" class="btn btn-info btn-lg"><?php echo $button; ?></button>
+                                    <a href="dashboard.php" class="btn btn-danger btn-lg">BACK</a>
                                 </div>
                             </div>
                         </form>
