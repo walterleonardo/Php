@@ -124,7 +124,7 @@ if ($login->is_loggedin()) {
                                 <div class="clearfix"></div>
                                 <div class="col-lg-12 text-center">
                                     <div id="success"></div>
-                                    <button type="submit" class="btn btn-xl">RESTART PASSWORD</button>
+                                    <button type="submit" class="btn btn-info btn-lg">RESTART PASSWORD</button>
                                 </div>
                             </div>
                         </form>

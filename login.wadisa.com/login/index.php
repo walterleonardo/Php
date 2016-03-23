@@ -143,7 +143,7 @@ if ($login->is_loggedin()) {
                                 <div class="clearfix"></div>
                                 <div class="col-lg-12 text-center">
                                     <div id="success"></div>
-                                    <button type="submit" name="btn-login" class="btn btn-xl">LOGIN</button>
+                                    <button type="submit" name="btn-login" class="btn btn-info btn-lg">LOGIN</button>
                                 </div>
                             </div>
                         </form>
