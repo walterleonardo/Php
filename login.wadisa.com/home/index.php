@@ -1,4 +1,5 @@
 <?php
+//ESTO ES UNA PRUEBA DE FUNCIONALIDADES
 require_once("../config/session.php");
 //session_start();
 require_once("../config/class.user.php");
